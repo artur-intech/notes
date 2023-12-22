@@ -1,0 +1,9 @@
+- backend: check empty note
+- format `note.rb`. How to skip spaces. `trim_mode` does not work.
+- js unit testing?
+- system test using Capybara
+- full screen api for editing
+- use client-side storage and sync notes with the server
+- mobile support (https://developer.mozilla.org/en-US/docs/Web/API/Touch_events/Using_Touch_Events)
+- archive? trash bin?
+- Sync with server (server-sent events?)

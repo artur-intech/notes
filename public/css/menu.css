@@ -1,0 +1,18 @@
+.menu {
+    background: white;
+    border: #ccc solid 1px;
+    border-radius: .5em;
+    box-shadow: .3em .3em .5em gray;
+    position: absolute;
+    user-select: none;
+}
+
+.menu .item {
+    padding: .5em 1em;
+    cursor: default;
+}
+
+.menu .item:hover {
+    border-radius: .5em;
+    background: #f1f1f1;
+}

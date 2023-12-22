@@ -1,0 +1,31 @@
+<p class="new-note-btn-container">
+    <button id="new-note-btn">New note</button>
+</p>
+
+<div id="notes">
+    <% notes.each do |note| %>
+        <%= erb :note, locals: { note: note }, trim: '>' %>
+    <% end %>
+</div>
+
+<div class="no-notes-msg"<%= ' hidden' if notes.any? %>>
+    There are no notes yet. Start typing, paste or click "New note" button to create a new note.
+</div>
+
+<dialog id="new-note-dialog">
+    <form action="<%= url('/notes') %>" method="post">
+        <div>
+            <label for="text">Text:</label>
+            <textarea name="text" id="text" required autofocus></textarea>
+        </div>
+
+        <div class="actions">
+            <input value="Close dialog" class="js-close-btn" type="button">
+            <input class="submit-btn" value="Create note" type="submit">
+        </div>
+    </form>
+</dialog>
+
+<template id="note-template">
+    <%= erb :note, locals: { note: OpenStruct.new(id: nil, text: nil) } %>
+</template>

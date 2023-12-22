@@ -1,0 +1,66 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run ruby file",
+            "type": "shell",
+            "command": "ruby ${file}",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "isBackground": true,
+            "options": {
+                "env": {
+                    "PG_HOST": "localhost",
+                    "PG_USER": "notes_development",
+                    "PG_PASSWORD": "notes_development",
+                }
+            },
+        },
+        {
+            "label": "Run Ruby tests",
+            "group": "test",
+            "type": "shell",
+            "command": "rake test",
+            "icon": {
+                "color": "terminal.ansiBlue"
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "isBackground": false,
+            "options": {
+                "env": {
+                    "PG_HOST": "localhost",
+                    "PG_USER": "notes_test",
+                    "PG_PASSWORD": "notes_test",
+                }
+            },
+        },
+        {
+            "label": "bundle install",
+            "type": "shell",
+            "command": "bundle install",
+            "hide": false,
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "isBackground": false
+        }
+    ]
+}

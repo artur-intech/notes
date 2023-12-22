@@ -1,0 +1,170 @@
+@font-face {
+    font-family: "OpenSans";
+    src: url("/fonts/OpenSans-Regular.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSans";
+    src: url("/fonts/OpenSans-Bold.woff2") format("woff2");
+    font-weight: bold;
+    font-display: swap;
+}
+
+html {
+    font-size: 100%;
+}
+
+body {
+    font-family: "OpenSans", sans-serif;
+    margin: 0;
+    line-height: 150%;
+}
+
+main {
+    padding: .5em;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+    font-size: 100%;
+}
+
+ol,
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* p {
+    line-height: 150%;
+    max-width: 75ch;
+}
+
+a {
+    color: #0072b3;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #71A2BF;
+    text-decoration: underline;
+} */
+
+.new-note-btn-container {
+    text-align: right;
+}
+
+#notes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .5em;
+    align-content: flex-start;
+    cursor: default;
+}
+
+.note {
+    background: #F0C046;
+    color: white;
+    border: #D99B3F solid 1px;
+    border-radius: .5em;
+    padding: 1em;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+    /* overflow-y: hidden; */
+    /* box-shadow: .3em .3em .3em rgba(200, 200, 200, 0.6); */
+    box-shadow: inset 0 0 0 1px white;
+    flex: 1 auto;
+    /* Check https://caniuse.com/css-line-clamp once standardized. */
+}
+
+.note:not([contenteditable="plaintext-only"]) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+.note:focus-visible {
+    background: #F0D446;
+    text-shadow: 1px 1px 5px #aaa;
+    outline: none;
+    filter: none;
+    overflow-y: auto;
+    width: 50%;
+    height: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.note.drop-zone {
+    background: #F0D446;
+}
+
+.note a {
+    color: white;
+}
+
+textarea {
+    padding: 1em;
+    width: 100%;
+    min-height: 20em;
+    box-sizing: border-box;
+}
+
+#new-note-dialog {
+    border: none;
+    width: 100%;
+}
+
+#new-note-dialog::backdrop {
+    backdrop-filter: blur(3px);
+}
+
+#new-note-dialog .actions {
+    text-align: right;
+}
+
+#new-note-dialog .submit-btn {
+    font-weight: bold;
+    background: #8FB431;
+    color: white;
+}
+
+#new-note-dialog .submit-btn:hover {
+    background: #A7D239;
+}
+
+input[type=button],
+input[type=submit],
+button {
+    background: #f1f1f1;
+    border: #111 solid 1px;
+    padding: .5em 1em;
+}
+
+@media screen and (min-width: 1024px) {
+    #notes {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: .5em;
+        align-content: flex-start;
+    }
+
+    #new-note-dialog {
+        box-shadow: .3em .3em .5em gray;
+        width: 50%;
+    }
+}

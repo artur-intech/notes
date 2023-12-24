@@ -56,6 +56,13 @@ class NotesApiTest < IntegrationTestCase
     assert_equal cached_first_position, second.position
   end
 
+  def test_csp_header
+    get '/'
+
+    assert last_response.ok?
+    assert_equal "default-src 'self'", last_response.headers['Content-Security-Policy']
+  end
+
   private
 
   def db_note_count

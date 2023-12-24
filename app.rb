@@ -29,6 +29,7 @@ end
 
 get '/' do
   content_type :html
+  headers['Content-Security-Policy'] = "default-src 'self'"
   erb :index, locals: { notes: pg_notes }
 end
 

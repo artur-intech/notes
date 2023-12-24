@@ -30,6 +30,18 @@ class PgNotesTest < TestCase
     assert_equal([3, 2, 1], actual)
   end
 
+  def test_represents_itself_as_json
+    create_fixtures
+    first_fixture = fixtures[:notes][:first]
+    second_fixture = fixtures[:notes][:second]
+    pg_notes = PgNotes.new(pg_connection)
+
+    actual = pg_notes.json
+
+    assert_equal [{ id: second_fixture.id, text: second_fixture.text, position: second_fixture.position },
+                  { id: first_fixture.id, text: first_fixture.text, position: first_fixture.position }].to_json, actual
+  end
+
   private
 
   def teardown

@@ -7,13 +7,14 @@ class NotesApiTest < IntegrationTestCase
     assert db_note_count.zero?
     text = 'note text'
     position = 1
+    inserted_id = 1
 
     post('/notes', text:, position:)
 
     assert_equal 1, db_note_count
     assert last_response.ok?
     assert_json_response
-    assert_equal ({ note: { id: 1, text:, position: } }), json_response
+    assert_equal PgNote.new(inserted_id, pg_connection).json_hash, json_response
   end
 
   def test_updates
@@ -27,7 +28,7 @@ class NotesApiTest < IntegrationTestCase
     assert_equal new_text, pg_connection.exec_params('SELECT text FROM notes WHERE id = $1', [note.id]).getvalue(0, 0)
     assert last_response.ok?
     assert_json_response
-    assert_equal ({ note: { id: note.id, text: new_text } }), json_response
+    assert_equal PgNote.new(note.id, pg_connection).json_hash, json_response
   end
 
   def test_deletes

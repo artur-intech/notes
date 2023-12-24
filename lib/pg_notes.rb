@@ -6,7 +6,7 @@ class PgNotes
   def initialize(pg_connection)
     @pg_connection = pg_connection
     @pg_note_by_result_row = proc do |pg_row|
-      OpenStruct.new(id: pg_row['id'], text: pg_row['text'], position: pg_row['position'])
+      PgNote.new(pg_row['id'], pg_connection)
     end
   end
 
@@ -25,6 +25,10 @@ class PgNotes
         yield pg_note_by_result_row.call(pg_row)
       end
     end
+  end
+
+  def json
+    map(&:json_hash).to_json
   end
 
   private

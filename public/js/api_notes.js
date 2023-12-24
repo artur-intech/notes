@@ -10,9 +10,7 @@ class ApiNotes {
             const okStatus = 200;
 
             if (request.readyState === doneState && request.status === okStatus) {
-                const apiNote = request.response.note;
-
-                noteList.add({ id: apiNote.id, text: apiNote.text, position: apiNote.position });
+                noteList.add({ id: request.response.id, text: request.response.text, position: request.response.position });
                 dialog.hide();
             } else {
                 alert('New note request has failed.');

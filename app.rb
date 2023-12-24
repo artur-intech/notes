@@ -35,16 +35,16 @@ end
 post '/notes' do
   text = params[:text]
   position = params[:position].to_i
-  id = pg_notes.add(text, position)
+  inserted_id = pg_notes.add(text, position)
 
-  { note: { id:, text:, position: } }.to_json
+  pg_note = PgNote.new(inserted_id, pg_connection)
+  pg_note.json
 end
 
 patch '/notes/:id' do
   pg_note = PgNote.new(params[:id].to_i, pg_connection)
   pg_note.update(params[:text])
-
-  { note: { id: pg_note.id, text: pg_note.text } }.to_json
+  pg_note.json
 end
 
 delete '/notes/:id' do

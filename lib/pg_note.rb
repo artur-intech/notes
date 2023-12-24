@@ -31,6 +31,14 @@ class PgNote
     pg_connection.exec_params('UPDATE notes SET position = $1 WHERE id = $2', [src_position, target_id])
   end
 
+  def json_hash
+    { id:, text:, position: }
+  end
+
+  def json
+    json_hash.to_json
+  end
+
   private
 
   attr_reader :pg_connection

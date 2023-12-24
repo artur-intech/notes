@@ -13,6 +13,7 @@ pg_connection = PG::Connection.new(host: ENV['PG_HOST'],
 pg_connection.type_map_for_results = PG::BasicTypeMapForResults.new(pg_connection)
 
 set :default_content_type, :json
+set :show_exceptions, false
 
 configure :development do
   Sinatra::Application.reset!

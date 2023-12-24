@@ -57,3 +57,7 @@ patch '/notes/:id/swap' do
   pg_note = PgNote.new(params[:id], pg_connection)
   pg_note.swap(params[:note_id])
 end
+
+get '/notes' do
+  pg_notes.json
+end

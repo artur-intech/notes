@@ -63,6 +63,18 @@ class NotesApiTest < IntegrationTestCase
     assert_equal "default-src 'self'", last_response.headers['Content-Security-Policy']
   end
 
+  def test_lists
+    create_fixtures
+    fixture = fixtures[:notes][:first]
+
+    get '/notes'
+
+    assert last_response.ok?
+    assert_json_response
+    assert_equal fixtures[:notes].count, json_response.size
+    assert_equal PgNote.new(fixture.id, pg_connection).json_hash, json_response[1]
+  end
+
   private
 
   def db_note_count

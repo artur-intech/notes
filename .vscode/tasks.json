@@ -4,7 +4,7 @@
         {
             "label": "Run ruby file",
             "type": "shell",
-            "command": "ruby ${file}",
+            "command": "puma --control-url tcp://127.0.0.1:9293 --control-token test",
             "presentation": {
                 "reveal": "always",
                 "panel": "shared",

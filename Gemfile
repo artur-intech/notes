@@ -7,6 +7,7 @@ gem 'puma'
 gem 'rack-test'
 gem 'rake'
 gem 'sinatra'
+gem 'connection_pool'
 
 group :development do
   gem 'rack-unreloader'

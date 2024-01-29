@@ -7,8 +7,6 @@ const apiNotes = new ApiNotes();
 new Swapper(notes, noteList);
 new NewNoteDialog({ apiNotes: apiNotes, noteList: noteList });
 
-new MutationObserver(toggleNoNotesMsg).observe(notes, { childList: true });
-
 const menu = new Menu({
     target: notes,
     onOpen: function (contextMenuEvent) {
@@ -45,8 +43,3 @@ menu.createItem({
         }
     }
 });
-
-function toggleNoNotesMsg() {
-    const visible = notes.childElementCount;
-    document.querySelector('.no-notes-msg').hidden = visible;
-}

@@ -3,12 +3,11 @@ require 'pg'
 
 Minitest::TestTask.create
 
-pg_host = 'localhost'
-
-task :create_db, [:environment] do |_t, args|
-  pg_user = "notes_#{args.environment}"
-  pg_password = pg_user
-  pg_database = "notes_#{args.environment}"
+task :create_db do
+  pg_host = ENV['PG_HOST']
+  pg_user = ENV['PG_USER']
+  pg_password = ENV['PG_PASSWORD']
+  pg_database = pg_user
 
   `PGPASSWORD=#{pg_password} createdb -h #{pg_host} -U #{pg_user} #{pg_database}`
 
@@ -18,17 +17,19 @@ task :create_db, [:environment] do |_t, args|
   pg_connection.exec("GRANT ALL PRIVILEGES ON DATABASE #{pg_database} to #{pg_user};")
 end
 
-task :drop_db, [:environment] do |_t, args|
-  pg_user = "notes_#{args.environment}"
-  pg_password = pg_user
-  pg_database = "notes_#{args.environment}"
+task :drop_db do
+  pg_host = ENV['PG_HOST']
+  pg_user = ENV['PG_USER']
+  pg_password = ENV['PG_PASSWORD']
+  pg_database = pg_user
 
   `PGPASSWORD=#{pg_password} dropdb -h #{pg_host} -U #{pg_user} -f #{pg_database}`
 end
 
-task :load_db_schema, [:environment] do |_t, args|
-  pg_user = "notes_#{args.environment}"
-  pg_password = pg_user
+task :load_db_schema do
+  pg_host = ENV['PG_HOST']
+  pg_user = ENV['PG_USER']
+  pg_password = ENV['PG_PASSWORD']
 
   pg_connection = PG::Connection.new(host: pg_host,
                                      user: pg_user,
@@ -37,9 +38,9 @@ task :load_db_schema, [:environment] do |_t, args|
 end
 
 task :load_db_dummy_data do
-  environment = 'development'
-  pg_user = "notes_#{environment}"
-  pg_password = pg_user
+  pg_host = ENV['PG_HOST']
+  pg_user = ENV['PG_USER']
+  pg_password = ENV['PG_PASSWORD']
 
   pg_connection = PG::Connection.new(host: pg_host,
                                      user: pg_user,

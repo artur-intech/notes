@@ -4,7 +4,7 @@ class ContextMenu {
     #onOpen;
     #onClose;
     #container;
-    #containerCssClassName = 'menu';
+    #elementCssClassName = 'menu';
 
     constructor({ target, onOpen, onClose }) {
         this.#onOpen = onOpen;
@@ -58,7 +58,7 @@ class ContextMenu {
     }
     #createElement() {
         const container = document.createElement('ul');
-        container.classList.add(this.#containerCssClassName);
+        container.classList.add(this.#elementCssClassName);
         container.hidden = true;
 
         this.#container = container;

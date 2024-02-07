@@ -7,7 +7,7 @@ const apiNotes = new ApiNotes();
 new Swapper(notes, noteList);
 new NewNoteDialog({ apiNotes: apiNotes, noteList: noteList });
 
-const menu = new Menu({
+const menu = new ContextMenu({
     target: notes,
     onOpen: function (contextMenuEvent) {
         const continueExecution = contextMenuEvent.target.matches('.note') && editor.inactive();

@@ -31,6 +31,18 @@ class PgNotes
     map(&:json_hash).to_json
   end
 
+  def updated_at
+    result = []
+
+    pg_connection.exec('SELECT id, updated_at FROM notes') do |pg_result|
+      pg_result.each do |row|
+        result << { id: row['id'], updated_at: row['updated_at'] }
+      end
+    end
+
+    result
+  end
+
   private
 
   attr_reader :pg_connection, :pg_note_by_result_row

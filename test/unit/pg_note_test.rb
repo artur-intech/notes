@@ -19,11 +19,15 @@ class PgNoteTest < TestCase
     note = fixtures[:notes][:first]
     new_text = 'new text'
     refute_equal new_text, note.text
+    assert note.updated_at
     pg_note = PgNote.new(note.id, pg_connection)
 
     pg_note.update(new_text)
 
     assert_equal new_text, pg_note.text
+    refute_equal note.updated_at,
+                 pg_connection.exec_params('SELECT updated_at FROM notes WHERE id = $1', [note.id]).getvalue(0, 0),
+                 'Last update date must be updated'
   end
 
   def test_deletes_itself

@@ -42,6 +42,17 @@ class PgNotesTest < TestCase
                   { id: first_fixture.id, text: first_fixture.text, position: first_fixture.position }].to_json, actual
   end
 
+  def test_reports_updated_at
+    create_fixtures
+    first_fixture = fixtures[:notes][:first]
+    pg_notes = PgNotes.new(pg_connection)
+
+    actual = pg_notes.updated_at
+
+    assert_equal fixtures[:notes].count, actual.count
+    assert_equal ({ id: first_fixture.id, updated_at: first_fixture.updated_at }), actual.first
+  end
+
   private
 
   def teardown

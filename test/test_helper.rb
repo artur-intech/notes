@@ -37,10 +37,12 @@ class TestCase < Minitest::Test
     create_note_fixture(:second, 'note2 text', 2)
   end
 
-  def create_note_fixture(tag, text = 'whatever', position)
-    pg_notes = PgNotes.new(pg_connection)
-    id = pg_notes.add(text, position)
-    fixture = OpenStruct.new(id:, text:, position:)
+  def create_note_fixture(tag, text = 'whatever', position, updated_at: Time.now)
+    inserted_id = pg_connection.exec_params('INSERT INTO notes (text, position, updated_at) VALUES ($1, $2, $3) RETURNING id',
+                                            [text, position, updated_at]).getvalue(0, 0)
+    row = pg_connection.exec_params('SELECT * FROM notes WHERE id = $1', [inserted_id])
+    fixture = OpenStruct.new(id: row[0]['id'], text: row[0]['text'], position: row[0]['position'],
+                             updated_at: row[0]['updated_at'])
     @fixtures[:notes][tag] = fixture
     fixture
   end

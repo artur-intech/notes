@@ -13,7 +13,7 @@ class PgNote
   end
 
   def update(text)
-    pg_connection.exec_params('UPDATE notes SET text = $2 WHERE id = $1', [id, text])
+    pg_connection.exec_params('UPDATE notes SET text = $2, updated_at = NOW() WHERE id = $1', [id, text])
   end
 
   def delete
@@ -27,8 +27,9 @@ class PgNote
   def swap(target_id)
     src_position = position
     target_position = self.class.new(target_id, pg_connection).position
-    pg_connection.exec_params('UPDATE notes SET position = $1 WHERE id = $2', [target_position, id])
-    pg_connection.exec_params('UPDATE notes SET position = $1 WHERE id = $2', [src_position, target_id])
+    pg_connection.exec_params('UPDATE notes SET position = $1, updated_at = NOW() WHERE id = $2', [target_position, id])
+    pg_connection.exec_params('UPDATE notes SET position = $1, updated_at = NOW() WHERE id = $2',
+                              [src_position, target_id])
   end
 
   def json_hash

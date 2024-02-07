@@ -9,7 +9,7 @@ class ContextMenu {
     constructor({ target, onOpen, onClose }) {
         this.#onOpen = onOpen;
         this.#onClose = onClose;
-        this.#createContainer();
+        this.#createElement();
 
         document.addEventListener('click', this.#hide.bind(this));
         document.addEventListener('contextmenu', this.#hide.bind(this));
@@ -56,7 +56,7 @@ class ContextMenu {
         this.#container.hidden = true;
         document.removeEventListener('scroll', this.#hide.bind(this));
     }
-    #createContainer() {
+    #createElement() {
         const container = document.createElement('ul');
         container.classList.add(this.#containerCssClassName);
         container.hidden = true;

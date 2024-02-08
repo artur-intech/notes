@@ -11,8 +11,8 @@ class ContextMenu {
         this.#onClose = onClose;
         this.#createElement();
 
-        document.addEventListener('click', this.#hide.bind(this));
-        document.addEventListener('contextmenu', this.#hide.bind(this));
+        document.addEventListener('click', this.#close.bind(this));
+        document.addEventListener('contextmenu', this.#close.bind(this));
 
         target.addEventListener('contextmenu', (e) => {
             if (!this.#onOpen(e)) return;
@@ -22,9 +22,9 @@ class ContextMenu {
             const absTopPositionPx = e.pageY;
             const absLeftPositionPx = e.pageX;
 
-            this.#show(absTopPositionPx, absLeftPositionPx);
+            this.#open(absTopPositionPx, absLeftPositionPx);
 
-            document.addEventListener('scroll', this.#hide.bind(this), { once: true });
+            document.addEventListener('scroll', this.#close.bind(this), { once: true });
 
             // Without this the menu will be immediately closed by the "contextmenu" event on the document
             e.stopPropagation();
@@ -32,7 +32,7 @@ class ContextMenu {
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                this.#hide();
+                this.#close();
             }
         });
     }
@@ -44,17 +44,17 @@ class ContextMenu {
 
         this.#container.appendChild(item);
     }
-    #show(absTopPositionPx, absLeftPositionPx) {
+    #open(absTopPositionPx, absLeftPositionPx) {
         this.#container.style.top = `${absTopPositionPx}px`;
         this.#container.style.left = `${absLeftPositionPx}px`;
         this.#container.hidden = false;
     }
-    #hide() {
+    #close() {
         if (this.#container.hidden) return;
 
         this.#onClose();
         this.#container.hidden = true;
-        document.removeEventListener('scroll', this.#hide.bind(this));
+        document.removeEventListener('scroll', this.#close.bind(this));
     }
     #createElement() {
         const container = document.createElement('ul');

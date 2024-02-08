@@ -54,6 +54,8 @@ class ContextMenu {
 
         this.#onClose();
         this.#container.hidden = true;
+
+        // Needed since `once: true` only has effect when a user scrolls
         document.removeEventListener('scroll', this.#close.bind(this));
     }
     #createElement() {

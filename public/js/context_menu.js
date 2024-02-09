@@ -4,12 +4,12 @@ class ContextMenu {
     #onOpen;
     #onClose;
     #container;
-    #elementCssClassName = 'menu';
+    #containerCssClassName = 'menu';
 
     constructor({ target, onOpen, onClose }) {
         this.#onOpen = onOpen;
         this.#onClose = onClose;
-        this.#createElement();
+        this.#createHtml();
 
         document.addEventListener('click', this.#close.bind(this));
         document.addEventListener('contextmenu', this.#close.bind(this));
@@ -58,9 +58,9 @@ class ContextMenu {
         // Needed since `once: true` only has effect when a user scrolls
         document.removeEventListener('scroll', this.#close.bind(this));
     }
-    #createElement() {
+    #createHtml() {
         const container = document.createElement('ul');
-        container.classList.add(this.#elementCssClassName);
+        container.classList.add(this.#containerCssClassName);
         container.hidden = true;
 
         this.#container = container;

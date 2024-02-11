@@ -1,28 +1,47 @@
 'use strict';
 
 class ApiNotes {
-    add({ text, dialog, noteList }) {
+    add({ text, position, onSuccess }) {
         const url = '/notes';
         const request = new XMLHttpRequest();
-        const params = new FormData();
-        const loadCallback = function () {
+        const onLoad = function () {
             const doneState = 4;
             const okStatus = 200;
 
             if (request.readyState === doneState && request.status === okStatus) {
-                noteList.add({ id: request.response.id, text: request.response.text, position: request.response.position });
-                dialog.hide();
+                const note = request.response;
+                onSuccess(note);
             } else {
                 alert('New note request has failed.');
             }
         };
 
+        const params = new FormData();
         params.append('text', text);
-        params.append('position', noteList.nextPosition());
+        params.append('position', position);
 
-        request.addEventListener('load', loadCallback);
+        request.addEventListener('load', onLoad);
         request.responseType = 'json';
         request.open('POST', url);
         request.send(params);
+    }
+    fetch({ onSuccess }) {
+        const url = '/notes';
+        const request = new XMLHttpRequest();
+        const loadCallback = function () {
+            const doneState = 4;
+            const okStatus = 200;
+
+            if (request.readyState === doneState && request.status === okStatus) {
+                onSuccess(request.response);
+            } else {
+                alert('Request has failed.');
+            }
+        };
+
+        request.addEventListener('load', loadCallback.bind(this));
+        request.responseType = 'json';
+        request.open('GET', url);
+        request.send();
     }
 }

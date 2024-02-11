@@ -1,7 +1,6 @@
 'use strict';
 
 class NewNoteDialog {
-    #apiNotes;
     #element;
     #btn;
     #form;
@@ -9,8 +8,7 @@ class NewNoteDialog {
     #closeBtn;
     #newBtnSelector = '#new-note-btn';
 
-    constructor({ apiNotes, noteList }) {
-        this.#apiNotes = apiNotes;
+    constructor({ noteList }) {
         this.#element = document.querySelector('#new-note-dialog');
         this.#btn = document.querySelector(this.#newBtnSelector);
         this.#form = this.#element.querySelector('form');
@@ -41,14 +39,13 @@ class NewNoteDialog {
 
             const normalizedText = this.#textField.value.trim();
 
-            this.#apiNotes.add({
+            noteList.add({
                 text: normalizedText,
-                dialog: this,
-                noteList: noteList
+                onSuccess: () => { this.#hide() }
             });
         });
 
-        this.#closeBtn.addEventListener('click', this.hide.bind(this));
+        this.#closeBtn.addEventListener('click', this.#hide.bind(this));
 
         this.#textField.addEventListener('keydown', (e) => {
             if (this.#saveShortcutPressed(e)) {
@@ -56,7 +53,7 @@ class NewNoteDialog {
             }
         });
     }
-    hide() {
+    #hide() {
         this.#element.close();
         this.#resetTextField();
     }

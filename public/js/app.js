@@ -1,11 +1,11 @@
 'use strict';
 
 const notes = document.querySelector('#notes');
-const noteList = new NoteList({ element: notes, template: document.querySelector('#note-template') });
-const editor = new Editor(notes, noteList);
 const apiNotes = new ApiNotes();
+const noteList = new NoteList({ apiNotes: apiNotes, element: notes, template: document.querySelector('#note-template') });
+const editor = new Editor(notes, noteList);
 new Swapper(notes, noteList);
-new NewNoteDialog({ apiNotes: apiNotes, noteList: noteList });
+new NewNoteDialog({ noteList: noteList });
 
 const menu = new ContextMenu({
     target: notes,

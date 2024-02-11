@@ -1,12 +1,14 @@
 'use strict';
 
 class NoteList {
+    #apiNotes;
     #element;
     #template;
     #selector = '.note';
     #sseEventSrc;
 
-    constructor({ element, template }) {
+    constructor({ apiNotes, element, template }) {
+        this.#apiNotes = apiNotes;
         this.#element = element;
         this.#template = template;
 
@@ -22,14 +24,24 @@ class NoteList {
         this.#initSse();
         new MutationObserver(this.#toggleNoNotesMsg.bind(this)).observe(this.#element, { childList: true });
     }
-    add({ id, text, position }) {
-        const note = this.#noteElement({ id: id, text: text, position: position });
-        this.#element.prepend(note);
+    add({ text, onSuccess }) {
+        const position = this.#nextPosition();
+
+        this.#apiNotes.add({
+            text: text,
+            position: position,
+            onSuccess: (apiNote) => {
+                const note = this.#noteElement({ id: apiNote.id, text: apiNote.text, position: apiNote.position });
+                this.#element.prepend(note);
+
+                onSuccess();
+            }
+        });
     }
     remove(id) {
         this.#element.querySelector(`.note[data-id="${id}"]`).remove();
     }
-    nextPosition() {
+    #nextPosition() {
         return this.#count() ? this.#biggestPosition() + 1 : 0;
     }
     includes(element) {
@@ -39,30 +51,18 @@ class NoteList {
         this.#render();
     }
     #render() {
-        const url = '/notes';
-        const request = new XMLHttpRequest();
-        const loadCallback = function () {
-            const doneState = 4;
-            const okStatus = 200;
-
-            if (request.readyState === doneState && request.status === okStatus) {
+        this.#apiNotes.fetch({
+            onSuccess: (apiNotes) => {
                 const elements = [];
 
-                request.response.reverse().forEach((note) => {
-                    const noteElement = this.#noteElement({ id: note.id, text: note.text, position: note.position });
+                apiNotes.reverse().forEach((apiNote) => {
+                    const noteElement = this.#noteElement({ id: apiNote.id, text: apiNote.text, position: apiNote.position });
                     elements.unshift(noteElement);
                 });
 
                 this.#element.replaceChildren(...elements);
-            } else {
-                alert('Request has failed.');
             }
-        };
-
-        request.addEventListener('load', loadCallback.bind(this));
-        request.responseType = 'json';
-        request.open('GET', url);
-        request.send();
+        });
     }
     #count() {
         return this.#element.childElementCount;

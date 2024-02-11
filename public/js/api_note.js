@@ -42,7 +42,7 @@ class ApiNote {
         request.open('DELETE', url);
         request.send();
     }
-    swap(note_id) {
+    swap(noteId) {
         const doneState = 4;
         const okStatus = 200;
         const url = `/notes/${this.#id}/swap`;
@@ -54,7 +54,7 @@ class ApiNote {
         };
 
         const params = new FormData();
-        params.append('note_id', note_id);
+        params.append('note_id', noteId);
 
         request.addEventListener('load', loadCallback);
         request.open('PATCH', url);

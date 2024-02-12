@@ -94,6 +94,6 @@ class IntegrationTestCase < TestCase
   end
 
   def assert_json_response
-    assert Rack::Mime.mime_type('.json'), last_response['content-type']
+    assert_equal Rack::Mime.mime_type('.json'), last_response['content-type']
   end
 end

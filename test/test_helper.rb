@@ -64,6 +64,7 @@ class SystemTestCase < TestCase
   end
 
   def teardown
+    super
     Capybara.reset_sessions!
     Capybara.use_default_driver
     clean_up_db
@@ -80,6 +81,7 @@ class IntegrationTestCase < TestCase
   private
 
   def teardown
+    super
     clean_up_db
   end
 

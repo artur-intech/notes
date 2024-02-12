@@ -71,7 +71,10 @@ patch '/notes/:id/swap' do
 end
 
 get '/notes' do
-  pg_notes.json
+  $pg_connection_pool.with do |pg_connection|
+    pg_notes = PgNotes.new(pg_connection)
+    pg_notes.json
+  end
 end
 
 get '/sse', provides: 'text/event-stream' do # rubocop:disable Metrics/BlockLength

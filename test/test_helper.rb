@@ -29,6 +29,8 @@ class TestCase < Minitest::Test
                                           user: ENV['PG_USER'],
                                           password: ENV['PG_PASSWORD'])
     @pg_connection.type_map_for_results = PG::BasicTypeMapForResults.new(@pg_connection)
+    @pg_connection.type_map_for_queries = PG::BasicTypeMapForQueries.new(@pg_connection)
+
     @pg_connection
   end
 

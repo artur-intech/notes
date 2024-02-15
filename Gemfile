@@ -2,14 +2,14 @@
 
 source 'https://rubygems.org'
 
+gem 'bcrypt'
+gem 'connection_pool'
 gem 'pg'
 gem 'puma'
 gem 'rack-test'
 gem 'rake'
 gem 'sinatra'
-gem 'connection_pool'
 gem 'warden'
-gem 'bcrypt'
 
 group :development do
   gem 'rack-unreloader'

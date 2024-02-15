@@ -8,6 +8,7 @@ gem 'rack-test'
 gem 'rake'
 gem 'sinatra'
 gem 'connection_pool'
+gem 'warden'
 
 group :development do
   gem 'rack-unreloader'

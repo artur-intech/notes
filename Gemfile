@@ -12,7 +12,6 @@ gem 'sinatra'
 gem 'warden'
 
 group :development do
-  gem 'rack-unreloader'
   gem 'solargraph'
 end
 

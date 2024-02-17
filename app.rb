@@ -3,7 +3,6 @@
 require 'pg'
 require 'sinatra'
 require 'connection_pool'
-require 'rack/unreloader'
 require 'ostruct'
 require_relative 'lib/pg_note'
 require_relative 'lib/pg_notes'

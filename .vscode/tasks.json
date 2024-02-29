@@ -22,7 +22,23 @@
             },
         },
         {
-            "label": "Run Ruby tests",
+            "label": "bundle install",
+            "type": "shell",
+            "command": "bundle install",
+            "hide": false,
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "isBackground": false
+        },
+        {
+            "label": "Run all tests",
             "group": "test",
             "type": "shell",
             "command": "rake test",
@@ -47,10 +63,13 @@
             },
         },
         {
-            "label": "bundle install",
+            "label": "Run testcase class",
             "type": "shell",
-            "command": "bundle install",
+            "command": "ruby -I test ${relativeFile}",
             "hide": false,
+            "icon": {
+                "color": "terminal.ansiBlue"
+            },
             "presentation": {
                 "echo": false,
                 "reveal": "always",
@@ -60,7 +79,40 @@
                 "clear": true
             },
             "problemMatcher": [],
-            "isBackground": false
+            "isBackground": false,
+            "options": {
+                "env": {
+                    "PG_HOST": "localhost",
+                    "PG_USER": "notes_test",
+                    "PG_PASSWORD": "notes_test",
+                }
+            },
+        },
+        {
+            "label": "Run test method",
+            "type": "shell",
+            "command": "ruby -I test ${relativeFile} -n ${selectedText}",
+            "hide": false,
+            "icon": {
+                "color": "terminal.ansiBlue"
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "isBackground": false,
+            "options": {
+                "env": {
+                    "PG_HOST": "localhost",
+                    "PG_USER": "notes_test",
+                    "PG_PASSWORD": "notes_test",
+                }
+            }
         }
     ]
 }

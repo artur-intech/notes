@@ -1,5 +1,5 @@
-POST http://localhost:9292/notes
+PATCH http://localhost:9292/notes/4
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 
-text=test
+text=new

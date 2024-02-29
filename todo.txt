@@ -5,16 +5,14 @@ todo
 - full screen api for editing
 - mobile support (https://developer.mozilla.org/en-US/docs/Web/API/Touch_events/Using_Touch_Events)
 - archive? trash bin?
-- login
 - dockerize
-- CI
 - validate input params
 - do not reload note list after deletion
 - What does pressing ESC do when editing? Currently it is buggy.
+- catch js errors
 
 done
+- CI
+- login
 - disable inline css and js
 - Sync with server (server-sent events?)
-
-notes
-PG_HOST=localhost PG_USER=notes_test PG_PASSWORD=notes_test ruby -Ilib:test test/integration/notes_test.rb

@@ -17,7 +17,8 @@ class TestCase < Minitest::Test
 
   def setup
     super
-    @fixtures = { notes: {} }
+    # Use `Set`
+    @fixtures = { users: {}, notes: {} }
   end
 
   def clean_up_db
@@ -35,25 +36,51 @@ class TestCase < Minitest::Test
   end
 
   def create_fixtures
-    create_note_fixture(:first, 'note1 text', 1)
-    create_note_fixture(:second, 'note2 text', 2)
+    user = create_user_fixture(tag: :first, email: random_email, encrypted_password:)
+    create_note_fixture(:first, 'note1 text', 1, user_id: user.id)
+    create_note_fixture(:second, 'note2 text', 2, user_id: user.id)
   end
 
-  def create_note_fixture(tag, text = 'whatever', position, updated_at: Time.now)
-    inserted_id = pg_connection.exec_params('INSERT INTO notes (text, position, updated_at) VALUES ($1, $2, $3) RETURNING id',
-                                            [text, position, updated_at]).getvalue(0, 0)
+  def create_note_fixture(tag, text = 'whatever', position, user_id:, updated_at: Time.now)
+    inserted_id = pg_connection.exec_params('INSERT INTO notes (text, position, updated_at, user_id) VALUES ($1, $2, $3, $4) RETURNING id',
+                                            [text, position, updated_at, user_id]).getvalue(0, 0)
     row = pg_connection.exec_params('SELECT * FROM notes WHERE id = $1', [inserted_id])
     fixture = OpenStruct.new(id: row[0]['id'], text: row[0]['text'], position: row[0]['position'],
-                             updated_at: row[0]['updated_at'])
+                             updated_at: row[0]['updated_at'], user_id: row[0]['user_id'])
     @fixtures[:notes][tag] = fixture
     fixture
   end
+
+  def create_user_fixture(tag:, email:, encrypted_password:)
+    id = pg_connection.exec_params('INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id',
+                                   [email, encrypted_password]).getvalue(0, 0)
+    result = pg_connection.exec_params('SELECT * FROM users WHERE id = $1', [id])
+    fixture = OpenStruct.new(id: result[0]['id'], email: result[0]['email'], position: result[0]['encrypted_password'])
+    @fixtures[:users][tag] = fixture
+    fixture
+  end
+
+  def random_email
+    local_part = SecureRandom.alphanumeric(5).downcase
+    "#{local_part}@inbox.test"
+  end
+
+  # Encrypted version of the `#plain_password`
+  def encrypted_password
+    '$2a$12$3h3qyoaOag9y4HafevwnD.2bFz2lqjcWZFSu5UJU4V13xFYVhVNbO'
+  end
+
+  def plain_password
+    'test'
+  end
+  alias right_password plain_password
 end
 
 class SystemTestCase < TestCase
   include Rack::Test::Methods
   include Capybara::DSL
   include Capybara::Minitest::Assertions
+  include Warden::Test::Helpers
 
   private
 
@@ -68,6 +95,7 @@ class SystemTestCase < TestCase
     Capybara.reset_sessions!
     Capybara.use_default_driver
     clean_up_db
+    Warden.test_reset!
   end
 
   def app
@@ -77,12 +105,14 @@ end
 
 class IntegrationTestCase < TestCase
   include Rack::Test::Methods
+  include Warden::Test::Helpers
 
   private
 
   def teardown
     super
     clean_up_db
+    Warden.test_reset!
   end
 
   def app

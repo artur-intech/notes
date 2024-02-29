@@ -4,10 +4,12 @@ require 'test_helper'
 
 class PgNotesTest < TestCase
   def test_adds_new_note
+    user = create_user_fixture(tag: 'whatever', email: random_email, encrypted_password:)
+
     assert db_note_count.zero?
 
     pg_notes = PgNotes.new(pg_connection)
-    pg_notes.add('whatever', 1)
+    pg_notes.add('whatever', 1, user.id)
 
     assert_equal 1, db_note_count
   end
@@ -19,10 +21,11 @@ class PgNotesTest < TestCase
   end
 
   def test_biggest_position_comes_first
+    user = create_user_fixture(tag: 'whatever', email: random_email, encrypted_password:)
     pg_notes = PgNotes.new(pg_connection)
-    pg_notes.add('whatever', 1)
-    pg_notes.add('whatever', 3)
-    pg_notes.add('whatever', 2)
+    pg_notes.add('whatever', 1, user.id)
+    pg_notes.add('whatever', 3, user.id)
+    pg_notes.add('whatever', 2, user.id)
     pg_notes = PgNotes.new(pg_connection)
 
     actual = pg_notes.collect(&:position)

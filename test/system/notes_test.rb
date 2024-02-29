@@ -3,6 +3,11 @@
 require 'test_helper'
 
 class NotesTest < SystemTestCase
+  def setup
+    super
+    login_as fixtures[:users][:first]
+  end
+
   def test_adds_new_note
     text = 'new note text'
 

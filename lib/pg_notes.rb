@@ -10,10 +10,10 @@ class PgNotes
     end
   end
 
-  def add(text, position)
+  def add(text, position, user_id)
     # pg_connection.exec_params("INSERT INTO notes (text, position) VALUES ($1, pg_sequence_last_value('notes_id_seq')) RETURNING id", [text]) do |result|
-    pg_connection.exec_params('INSERT INTO notes (text, position) VALUES ($1, $2) RETURNING id',
-                              [text, position]) do |result|
+    pg_connection.exec_params('INSERT INTO notes (text, position, user_id) VALUES ($1, $2, $3) RETURNING id',
+                              [text, position, user_id]) do |result|
       id = result.getvalue(0, 0)
       id
     end

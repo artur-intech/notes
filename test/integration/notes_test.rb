@@ -3,22 +3,27 @@
 require 'test_helper'
 
 class NotesApiTest < IntegrationTestCase
+  def setup
+    super
+    create_fixtures
+    login_as fixtures[:users][:first]
+  end
+
   def test_creates
-    assert db_note_count.zero?
+    assert_equal fixtures[:notes].count, db_note_count
     text = 'note text'
     position = 1
-    inserted_id = 1
 
     post('/notes', text:, position:)
 
-    assert_equal 1, db_note_count
     assert last_response.ok?
     assert_json_response
-    assert_equal PgNote.new(inserted_id, pg_connection).json_hash, json_response
+    assert_equal fixtures[:notes].count.next, db_note_count, 'Note must be created'
+    assert_equal text, json_response[:text]
+    assert_equal position, json_response[:position]
   end
 
   def test_updates
-    create_fixtures
     note = fixtures[:notes][:first]
     new_text = 'updated text'
     refute_equal new_text, note.text
@@ -32,7 +37,6 @@ class NotesApiTest < IntegrationTestCase
   end
 
   def test_deletes
-    create_fixtures
     note = fixtures[:notes][:first]
     assert_equal fixtures[:notes].count, db_note_count
 
@@ -43,7 +47,6 @@ class NotesApiTest < IntegrationTestCase
   end
 
   def test_swaps
-    create_fixtures
     first = PgNote.new(fixtures[:notes][:first].id, pg_connection)
     second = PgNote.new(fixtures[:notes][:second].id, pg_connection)
     cached_first_position = first.position
@@ -64,7 +67,6 @@ class NotesApiTest < IntegrationTestCase
   end
 
   def test_lists
-    create_fixtures
     fixture = fixtures[:notes][:first]
 
     get '/notes'
@@ -73,6 +75,31 @@ class NotesApiTest < IntegrationTestCase
     assert_json_response
     assert_equal fixtures[:notes].count, json_response.size
     assert_equal PgNote.new(fixture.id, pg_connection).json_hash, json_response[1]
+  end
+
+  def test_prohibit_anonymous_user
+    logout
+
+    get '/'
+    assert last_response.forbidden?, 'Anonymous user must not be able to access GET /'
+
+    get '/sse'
+    assert last_response.forbidden?, 'Anonymous user must not be able to access GET /sse'
+
+    get '/notes'
+    assert last_response.forbidden?, 'Anonymous user must not be able to access GET /notes'
+
+    post '/notes'
+    assert last_response.forbidden?, 'Anonymous user must not be able to access POST /notes'
+
+    patch '/notes/any'
+    assert last_response.forbidden?, 'Anonymous user must not be able to access PATCH /notes/:id'
+
+    delete '/notes/any'
+    assert last_response.forbidden?, 'Anonymous user must not be able to access DELETE /notes/:id'
+
+    patch '/notes/any/swap'
+    assert last_response.forbidden?, 'Anonymous user must not be able to access PATCH /notes/:id/swap'
   end
 
   private

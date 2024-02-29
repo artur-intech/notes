@@ -3,3 +3,6 @@ Style/Documentation:
 Metrics/AbcSize:
   Exclude:
       - "test/**/*"
+Metrics/MethodLength:
+  Exclude:
+      - "test/**/*"

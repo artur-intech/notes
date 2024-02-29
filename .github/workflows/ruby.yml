@@ -1,0 +1,31 @@
+on: push
+env:
+  PG_HOST: localhost
+  PG_USER: postgres
+  PG_PASSWORD: ""
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: $PG_PASSWORD
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+        - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Init db
+      run: |
+        bundle exec rake create_db
+        bundle exec rake load_db_schema
+    - run: bundle exec rake test

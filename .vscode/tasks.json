@@ -45,7 +45,7 @@
             "label": "Run all tests",
             "group": "test",
             "type": "shell",
-            "command": "rake test",
+            "command": "bundle exec rake test",
             "icon": {
                 "id": "test-view-icon",
             },

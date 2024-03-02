@@ -6,7 +6,6 @@ gem 'bcrypt'
 gem 'connection_pool'
 gem 'pg'
 gem 'puma'
-gem 'rack-test'
 gem 'rake'
 gem 'sinatra'
 gem 'warden'
@@ -18,6 +17,7 @@ end
 group :test do
   gem 'capybara'
   gem 'minitest'
+  gem 'rack-test'
   gem 'rubocop'
   gem 'selenium-webdriver'
 end

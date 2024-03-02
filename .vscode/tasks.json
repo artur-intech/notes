@@ -117,6 +117,18 @@
                     "PG_PASSWORD": "notes_test",
                 }
             }
+        },
+        {
+            "label": "Show rake tasks",
+            "type": "shell",
+            "command": "bundle exec rake -T",
+            "icon": {},
+            "presentation": {
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "isBackground": false
         }
     ]
 }

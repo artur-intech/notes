@@ -44,11 +44,17 @@ GEM
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
-    rack (2.2.8.1)
-    rack-protection (3.1.0)
-      rack (~> 2.2, >= 2.2.4)
+    rack (3.0.9.1)
+    rack-protection (4.0.0)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.0.0)
+      rack (>= 3.0.0)
     rack-test (2.1.0)
       rack (>= 1.3)
+    rackup (2.1.0)
+      rack (>= 3)
+      webrick (~> 1.8)
     rainbow (3.1.1)
     rake (13.1.0)
     rbs (2.8.4)
@@ -77,10 +83,11 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sinatra (3.1.0)
+    sinatra (4.0.0)
       mustermann (~> 3.0)
-      rack (~> 2.2, >= 2.2.4)
-      rack-protection (= 3.1.0)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.0.0)
+      rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
     solargraph (0.50.0)
       backport (~> 1.2)
@@ -103,6 +110,7 @@ GEM
     unicode-display_width (2.5.0)
     warden (1.2.9)
       rack (>= 2.0.9)
+    webrick (1.8.1)
     websocket (1.2.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -119,6 +127,7 @@ DEPENDENCIES
   pg
   puma
   rack-test
+  rackup
   rake
   rubocop
   selenium-webdriver

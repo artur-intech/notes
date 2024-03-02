@@ -28,4 +28,6 @@ jobs:
       run: |
         bundle exec rake create_db
         bundle exec rake load_db_schema
-    - run: bundle exec rake test
+
+    - name: Test
+      run: bundle exec rake test

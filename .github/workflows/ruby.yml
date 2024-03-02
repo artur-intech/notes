@@ -28,4 +28,14 @@ jobs:
       run: |
         bundle exec rake create_db
         bundle exec rake load_db_schema
-    - run: bundle exec rake test
+
+    - name: Test
+      run: bundle exec rake test
+      env:
+          COVERAGE: true
+
+    - uses: joshmfrankel/simplecov-check-action@main
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: coverallsapp/github-action@v2

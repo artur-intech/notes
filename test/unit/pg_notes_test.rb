@@ -58,10 +58,6 @@ class PgNotesTest < TestCase
 
   private
 
-  def teardown
-    clean_up_db
-  end
-
   def db_note_count
     pg_connection.exec('SELECT COUNT(*) FROM notes').getvalue(0, 0)
   end

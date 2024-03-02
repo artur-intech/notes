@@ -24,9 +24,4 @@ class PgUserTest < TestCase
     super
     create_fixtures
   end
-
-  def teardown
-    super
-    clean_up_db
-  end
 end

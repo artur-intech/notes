@@ -21,6 +21,11 @@ class TestCase < Minitest::Test
     @fixtures = { users: {}, notes: {} }
   end
 
+  def teardown
+    super
+    clean_up_db
+  end
+
   def clean_up_db
     pg_connection.exec('TRUNCATE notes RESTART IDENTITY CASCADE')
   end
@@ -94,7 +99,6 @@ class SystemTestCase < TestCase
     super
     Capybara.reset_sessions!
     Capybara.use_default_driver
-    clean_up_db
     Warden.test_reset!
   end
 
@@ -111,7 +115,6 @@ class IntegrationTestCase < TestCase
 
   def teardown
     super
-    clean_up_db
     Warden.test_reset!
   end
 

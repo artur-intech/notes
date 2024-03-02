@@ -87,9 +87,4 @@ class PgNoteTest < TestCase
     super
     create_fixtures
   end
-
-  def teardown
-    clean_up_db
-    super
-  end
 end

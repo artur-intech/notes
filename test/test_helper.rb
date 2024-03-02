@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/test/'
+  end
+end
+
+ENV['APP_ENV'] = 'test'
+
 require 'minitest/autorun'
 require 'rack/test'
 require 'capybara/minitest'
 require_relative '../app'
-
-ENV['APP_ENV'] = 'test'
 
 Capybara.app = Sinatra::Application
 Capybara.server = :puma, { Silent: true }

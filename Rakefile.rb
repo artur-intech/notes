@@ -1,7 +1,11 @@
 require 'minitest/test_task'
 require 'pg'
 
-Minitest::TestTask.create
+Minitest::TestTask.create do |t|
+  t.framework = %(require "test/test_helper.rb")
+  t.libs = %w[test .]
+  t.test_globs = ['test/**/*_test.rb']
+end
 
 task :create_db do
   pg_host = ENV['PG_HOST']

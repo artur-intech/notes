@@ -67,6 +67,31 @@
             },
         },
         {
+            "label": "Run all tests with coverage",
+            "type": "shell",
+            "command": "bundle exec rake test",
+            "icon": {
+                "id": "test-view-icon",
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "isBackground": false,
+            "options": {
+                "env": {
+                    "PG_HOST": "localhost",
+                    "PG_USER": "notes_test",
+                    "PG_PASSWORD": "notes_test",
+                    "COVERAGE": "true"
+                }
+            },
+        },
+        {
             "label": "Run testcase class",
             "type": "shell",
             "command": "ruby -I test ${relativeFile}",

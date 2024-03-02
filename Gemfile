@@ -21,4 +21,5 @@ group :test do
   gem 'rack-test'
   gem 'rubocop'
   gem 'selenium-webdriver'
+  gem 'simplecov'
 end

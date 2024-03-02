@@ -5,6 +5,9 @@
             "label": "Run ruby file",
             "type": "shell",
             "command": "puma --control-url tcp://127.0.0.1:9293 --control-token test",
+            "icon": {
+                "id": "testing-run-icon",
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "shared",
@@ -25,6 +28,7 @@
             "label": "bundle install",
             "type": "shell",
             "command": "bundle install",
+            "icon": {},
             "hide": false,
             "presentation": {
                 "echo": false,
@@ -43,7 +47,7 @@
             "type": "shell",
             "command": "rake test",
             "icon": {
-                "color": "terminal.ansiBlue"
+                "id": "test-view-icon",
             },
             "presentation": {
                 "echo": false,
@@ -68,7 +72,7 @@
             "command": "ruby -I test ${relativeFile}",
             "hide": false,
             "icon": {
-                "color": "terminal.ansiBlue"
+                "id": "test-view-icon",
             },
             "presentation": {
                 "echo": false,
@@ -94,7 +98,7 @@
             "command": "ruby -I test ${relativeFile} -n ${selectedText}",
             "hide": false,
             "icon": {
-                "color": "terminal.ansiBlue"
+                "id": "test-view-icon",
             },
             "presentation": {
                 "echo": false,

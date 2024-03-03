@@ -33,7 +33,9 @@ class AuthenticationIntegrationTest < IntegrationTestCase
   private
 
   def assert_root_redirect
-    assert last_response.redirect?, 'Response must redirect'
+    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status]
+
+    assert last_response.redirect?, "Response must redirect, but is '#{response_code_message}'"
     assert_equal '/', URI(last_response.location).path, 'Response must redirect to the root path'
   end
 end

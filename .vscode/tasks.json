@@ -90,6 +90,7 @@
                     "COVERAGE": "true"
                 }
             },
+            "problemMatcher": []
         },
         {
             "label": "Run testcase class",

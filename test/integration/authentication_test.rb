@@ -23,6 +23,13 @@ class AuthenticationIntegrationTest < IntegrationTestCase
     assert_root_redirect
   end
 
+  def test_nonexistent_email
+    post '/', { email: 'nonexistent', password: right_password }
+
+    refute last_request.env['warden'].authenticated?, 'User must be signed out'
+    assert last_response.forbidden?
+  end
+
   private
 
   def assert_root_redirect

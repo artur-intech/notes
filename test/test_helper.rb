@@ -30,7 +30,6 @@ class TestCase < Minitest::Test
 
   def setup
     super
-    # Use `Set`
     @fixtures = { users: {}, notes: {} }
   end
 

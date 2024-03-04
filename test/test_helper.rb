@@ -81,6 +81,7 @@ class TestCase < Minitest::Test
     local_part = SecureRandom.alphanumeric(5).downcase
     "#{local_part}@inbox.test"
   end
+  alias valid_email random_email
 
   # Encrypted version of the `#plain_password`
   def encrypted_password

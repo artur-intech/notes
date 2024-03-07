@@ -42,16 +42,6 @@ class TestCase < Minitest::Test
     pg_connection.exec('TRUNCATE notes RESTART IDENTITY CASCADE')
   end
 
-  def pg_connection
-    @pg_connection ||= PG::Connection.new(host: ENV['PG_HOST'],
-                                          user: ENV['PG_USER'],
-                                          password: ENV['PG_PASSWORD'])
-    @pg_connection.type_map_for_results = PG::BasicTypeMapForResults.new(@pg_connection)
-    @pg_connection.type_map_for_queries = PG::BasicTypeMapForQueries.new(@pg_connection)
-
-    @pg_connection
-  end
-
   def create_fixtures
     user = create_user_fixture(tag: :first, email: random_email, encrypted_password:)
     create_note_fixture(:first, 'note1 text', 1, user_id: user.id)

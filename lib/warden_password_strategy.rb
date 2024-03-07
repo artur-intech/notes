@@ -6,12 +6,10 @@ class WardenPasswordStrategy < Warden::Strategies::Base
   end
 
   def authenticate!
-    $pg_connection_pool.with do |pg_connection|
-      pg_users = PgUsers.new(pg_connection)
-      pg_user = pg_users.by_email(params['email'])
+    pg_users = PgUsers.new(pg_connection)
+    pg_user = pg_users.by_email(params['email'])
 
-      success!(pg_user) if pg_user.can_be_authenticated?(params['password'])
-    end
+    success!(pg_user) if pg_user.can_be_authenticated?(params['password'])
   rescue PgUsers::UserNotFound
     fail!('User with the provided email does not exist.')
   end

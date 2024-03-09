@@ -43,17 +43,6 @@ class TestCase < Minitest::Test
     pg_connection.exec('TRUNCATE users, notes RESTART IDENTITY CASCADE')
   end
 
-  def random_email
-    local_part = SecureRandom.alphanumeric(5).downcase
-    "#{local_part}@inbox.test"
-  end
-  alias valid_email random_email
-
-  # Encrypted version of the `#plain_password`
-  def encrypted_password
-    '$2a$12$3h3qyoaOag9y4HafevwnD.2bFz2lqjcWZFSu5UJU4V13xFYVhVNbO'
-  end
-
   def plain_password
     'test'
   end

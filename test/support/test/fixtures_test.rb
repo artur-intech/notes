@@ -4,7 +4,7 @@ require 'test_helper'
 
 class FixturesTest < Minitest::Test
   def test_represents_itself_as_hash
-    fixtures = Fixtures.new('test/support/fixtures.yml', pg_connection)
+    fixtures = Fixtures.new('test/support/test/fixtures.yml', pg_connection)
 
     actual = fixtures.to_hash
 

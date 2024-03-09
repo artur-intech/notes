@@ -17,11 +17,4 @@ class PgUserTest < TestCase
     assert pg_user.can_be_authenticated?(right_password)
     refute pg_user.can_be_authenticated?('wrong password')
   end
-
-  private
-
-  def setup
-    super
-    create_fixtures
-  end
 end

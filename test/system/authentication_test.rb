@@ -4,7 +4,6 @@ require 'test_helper'
 
 class AuthenticationSystemTest < SystemTestCase
   def test_sign_in
-    create_fixtures
     user = fixtures[:users][:first]
 
     visit '/'
@@ -18,7 +17,6 @@ class AuthenticationSystemTest < SystemTestCase
   end
 
   def test_sign_out
-    create_fixtures
     current_user = fixtures[:users][:first]
     login_as current_user
 

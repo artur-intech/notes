@@ -5,7 +5,6 @@ require 'test_helper'
 class NotesApiTest < IntegrationTestCase
   def setup
     super
-    create_fixtures
     login_as fixtures[:users][:first]
   end
 

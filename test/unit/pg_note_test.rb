@@ -62,7 +62,6 @@ class PgNoteTest < TestCase
   end
 
   def test_represents_itself_as_json_hash
-    create_fixtures
     fixture = fixtures[:notes][:first]
     pg_note = PgNote.new(fixture.id, pg_connection)
 
@@ -72,19 +71,11 @@ class PgNoteTest < TestCase
   end
 
   def test_represents_itself_as_json
-    create_fixtures
     fixture = fixtures[:notes][:first]
     pg_note = PgNote.new(fixture.id, pg_connection)
 
     actual = pg_note.json
 
     assert_equal pg_note.json_hash.to_json, actual
-  end
-
-  private
-
-  def setup
-    super
-    create_fixtures
   end
 end

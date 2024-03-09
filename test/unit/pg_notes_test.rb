@@ -4,28 +4,27 @@ require 'test_helper'
 
 class PgNotesTest < TestCase
   def test_adds_new_note
-    user = create_user_fixture(tag: 'whatever', email: valid_email, encrypted_password:)
-
-    assert db_note_count.zero?
+    user_id = fixtures[:users][:first].id
+    original_count = fixtures[:notes].size
 
     pg_notes = PgNotes.new(pg_connection)
-    pg_notes.add('whatever', 1, user.id)
+    pg_notes.add('whatever', 1, user_id)
 
-    assert_equal 1, db_note_count
+    assert_equal original_count.next, db_note_count
   end
 
   def test_iterates_itself
-    create_fixtures
     pg_notes = PgNotes.new(pg_connection)
     assert_equal fixtures[:notes].count, pg_notes.count
   end
 
   def test_biggest_position_comes_first
-    user = create_user_fixture(tag: 'whatever', email: valid_email, encrypted_password:)
+    user_id = fixtures[:users][:first].id
+    pg_connection.exec('TRUNCATE notes')
     pg_notes = PgNotes.new(pg_connection)
-    pg_notes.add('whatever', 1, user.id)
-    pg_notes.add('whatever', 3, user.id)
-    pg_notes.add('whatever', 2, user.id)
+    pg_notes.add('whatever', 1, user_id)
+    pg_notes.add('whatever', 3, user_id)
+    pg_notes.add('whatever', 2, user_id)
     pg_notes = PgNotes.new(pg_connection)
 
     actual = pg_notes.collect(&:position)
@@ -34,7 +33,6 @@ class PgNotesTest < TestCase
   end
 
   def test_represents_itself_as_json
-    create_fixtures
     first_fixture = fixtures[:notes][:first]
     second_fixture = fixtures[:notes][:second]
     pg_notes = PgNotes.new(pg_connection)
@@ -46,7 +44,6 @@ class PgNotesTest < TestCase
   end
 
   def test_reports_updated_at
-    create_fixtures
     first_fixture = fixtures[:notes][:first]
     pg_notes = PgNotes.new(pg_connection)
 

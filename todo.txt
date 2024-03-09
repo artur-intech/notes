@@ -16,3 +16,4 @@ done
 - login
 - disable inline css and js
 - Sync with server (server-sent events?)
+- yaml fixtures

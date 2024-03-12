@@ -6,7 +6,7 @@
             "type": "shell",
             "command": "puma --control-url tcp://127.0.0.1:9293 --control-token test",
             "icon": {
-                "id": "testing-run-icon",
+                "id": "testing-run-icon"
             },
             "presentation": {
                 "reveal": "always",
@@ -20,9 +20,9 @@
                 "env": {
                     "PG_HOST": "localhost",
                     "PG_USER": "notes_development",
-                    "PG_PASSWORD": "notes_development",
+                    "PG_PASSWORD": "notes_development"
                 }
-            },
+            }
         },
         {
             "label": "bundle install",
@@ -47,7 +47,7 @@
             "type": "shell",
             "command": "bundle exec rake test",
             "icon": {
-                "id": "test-view-icon",
+                "id": "test-view-icon"
             },
             "presentation": {
                 "echo": false,
@@ -62,16 +62,16 @@
                 "env": {
                     "PG_HOST": "localhost",
                     "PG_USER": "notes_test",
-                    "PG_PASSWORD": "notes_test",
+                    "PG_PASSWORD": "notes_test"
                 }
-            },
+            }
         },
         {
             "label": "Run all tests with coverage",
             "type": "shell",
             "command": "bundle exec rake test",
             "icon": {
-                "id": "test-view-icon",
+                "id": "test-view-icon"
             },
             "presentation": {
                 "echo": false,
@@ -90,7 +90,11 @@
                     "COVERAGE": "true"
                 }
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
         {
             "label": "Run testcase class",
@@ -98,7 +102,7 @@
             "command": "ruby -I test ${relativeFile}",
             "hide": false,
             "icon": {
-                "id": "test-view-icon",
+                "id": "test-view-icon"
             },
             "presentation": {
                 "echo": false,
@@ -114,9 +118,9 @@
                 "env": {
                     "PG_HOST": "localhost",
                     "PG_USER": "notes_test",
-                    "PG_PASSWORD": "notes_test",
+                    "PG_PASSWORD": "notes_test"
                 }
-            },
+            }
         },
         {
             "label": "Run test method",
@@ -124,7 +128,7 @@
             "command": "ruby -I test ${relativeFile} -n ${selectedText}",
             "hide": false,
             "icon": {
-                "id": "test-view-icon",
+                "id": "test-view-icon"
             },
             "presentation": {
                 "echo": false,
@@ -140,7 +144,7 @@
                 "env": {
                     "PG_HOST": "localhost",
                     "PG_USER": "notes_test",
-                    "PG_PASSWORD": "notes_test",
+                    "PG_PASSWORD": "notes_test"
                 }
             }
         },

@@ -39,3 +39,6 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - uses: coverallsapp/github-action@v2
+
+    - name: Publish code coverage to Code Climate
+      uses: paambaati/codeclimate-action@v5.0.0

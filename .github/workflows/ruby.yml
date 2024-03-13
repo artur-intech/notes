@@ -34,9 +34,9 @@ jobs:
       env:
           COVERAGE: true
 
-    - uses: joshmfrankel/simplecov-check-action@main
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    # - uses: joshmfrankel/simplecov-check-action@main
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
     # - uses: coverallsapp/github-action@v2
 

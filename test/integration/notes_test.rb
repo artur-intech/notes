@@ -39,7 +39,7 @@ class NotesApiTest < IntegrationTestCase
 
     delete "/notes/#{note.id}"
 
-    assert_equal user_notes.size - 1, db_user_note_count, 'Note should be deleted'
+    assert_equal user_notes.size - 1, db_user_note_count, 'Note must be deleted'
     assert_response :ok
   end
 

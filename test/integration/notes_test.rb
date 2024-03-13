@@ -14,7 +14,7 @@ class NotesApiTest < IntegrationTestCase
 
     post('/notes', text:, position:)
 
-    assert last_response.ok?
+    assert_response :ok
     assert_json_response
     assert_equal user_notes.size.next, db_user_note_count, 'Note must be created'
     assert_equal text, json_response[:text]
@@ -29,7 +29,7 @@ class NotesApiTest < IntegrationTestCase
     patch "/notes/#{note.id}", text: new_text
 
     assert_equal new_text, note.text
-    assert last_response.ok?
+    assert_response :ok
     assert_json_response
     assert_equal note.json_hash, json_response
   end
@@ -40,7 +40,7 @@ class NotesApiTest < IntegrationTestCase
     delete "/notes/#{note.id}"
 
     assert_equal user_notes.size - 1, db_user_note_count, 'Note should be deleted'
-    assert last_response.ok?
+    assert_response :ok
   end
 
   def test_swaps
@@ -51,7 +51,7 @@ class NotesApiTest < IntegrationTestCase
 
     patch "/notes/#{first.id}/swap", { note_id: second.id }
 
-    assert last_response.ok?
+    assert_response :ok
     assert_equal cached_second_position, first.position
     assert_equal cached_first_position, second.position
   end
@@ -59,7 +59,7 @@ class NotesApiTest < IntegrationTestCase
   def test_csp_header
     get '/'
 
-    assert last_response.ok?
+    assert_response :ok
     assert_equal "default-src 'self'", last_response.headers['Content-Security-Policy']
   end
 
@@ -68,7 +68,7 @@ class NotesApiTest < IntegrationTestCase
 
     get '/notes'
 
-    assert last_response.ok?
+    assert_response :ok
     assert_json_response
     assert_equal user_notes.size, json_response.size
     assert_equal PgNote.new(note.id, pg_connection).json_hash, json_response[1]
@@ -106,8 +106,7 @@ class NotesApiTest < IntegrationTestCase
     patch "/notes/#{note.id}", text: 'new'
 
     assert_equal original_text, note.text, 'Note text must be kept intact'
-    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
-    assert last_response.not_found?, "Response must be :not_found, but was :#{response_code_message}"
+    assert_response :not_found
   end
 
   def test_non_owned_note_cannot_be_deleted
@@ -117,8 +116,7 @@ class NotesApiTest < IntegrationTestCase
 
     assert pg_connection.exec_params('SELECT id FROM notes WHERE id = $1', [note.id]).num_tuples.nonzero?,
            'Note must not be deleted'
-    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
-    assert last_response.not_found?, "Response must be :not_found, but was :#{response_code_message}"
+    assert_response :not_found
   end
 
   def test_non_owned_note_cannot_be_swapped
@@ -128,8 +126,7 @@ class NotesApiTest < IntegrationTestCase
     patch "/notes/#{note.id}/swap", note_id: note.id
 
     assert_equal original_position, note.position, 'Note position must be kept intact'
-    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
-    assert last_response.not_found?, "Response must be :not_found, but was :#{response_code_message}"
+    assert_response :not_found
   end
 
   def non_owned_note

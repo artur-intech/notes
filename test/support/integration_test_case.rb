@@ -26,4 +26,9 @@ class IntegrationTestCase < TestCase
   def user
     PgUser.new(super.id, pg_connection)
   end
+
+  def assert_response(expected)
+    actual = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
+    assert last_response.public_send("#{expected}?"), "Response must be :#{expected}, but was :#{actual}"
+  end
 end

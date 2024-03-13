@@ -23,15 +23,13 @@ class AuthenticationIntegrationTest < IntegrationTestCase
     post '/', { email: 'nonexistent', password: right_password }
 
     refute last_request.env['warden'].authenticated?, 'User must be signed out'
-    assert last_response.forbidden?
+    assert_response :forbidden
   end
 
   private
 
   def assert_root_redirect
-    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status]
-
-    assert last_response.redirect?, "Response must redirect, but is '#{response_code_message}'"
+    assert_response :redirect
     assert_equal '/', URI(last_response.location).path, 'Response must redirect to the root path'
   end
 end

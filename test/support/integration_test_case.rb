@@ -22,4 +22,8 @@ class IntegrationTestCase < TestCase
   def assert_json_response
     assert_equal Rack::Mime.mime_type('.json'), last_response['content-type']
   end
+
+  def user
+    PgUser.new(super.id, pg_connection)
+  end
 end

@@ -4,8 +4,6 @@ require 'test_helper'
 
 class AuthenticationSystemTest < SystemTestCase
   def test_sign_in
-    user = fixtures[:users][:first]
-
     visit '/'
     fill_in 'email', with: user.email
     fill_in 'password', with: right_password
@@ -17,8 +15,7 @@ class AuthenticationSystemTest < SystemTestCase
   end
 
   def test_sign_out
-    current_user = fixtures[:users][:first]
-    login_as current_user
+    login_as user
 
     visit '/'
     click_link 'Sign out'

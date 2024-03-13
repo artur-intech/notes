@@ -5,7 +5,7 @@ require 'test_helper'
 class NotesTest < SystemTestCase
   def setup
     super
-    login_as fixtures[:users][:first]
+    login_as user
   end
 
   def test_adds_new_note

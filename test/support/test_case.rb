@@ -23,4 +23,16 @@ class TestCase < Minitest::Test
     'test'
   end
   alias right_password plain_password
+
+  def user
+    fixtures[:users][:first]
+  end
+
+  def user_notes
+    fixtures[:notes].select { |_k, note| note.user_id == user.id }.values
+  end
+
+  def db_user_note_count
+    pg_connection.exec_params('SELECT COUNT(*) FROM notes WHERE user_id = $1', [user.id]).getvalue(0, 0)
+  end
 end

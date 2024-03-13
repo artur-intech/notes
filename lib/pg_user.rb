@@ -18,6 +18,10 @@ class PgUser
     pg_connection.exec_params('SELECT email FROM users WHERE id = $1', [id]).getvalue(0, 0)
   end
 
+  def ==(other)
+    self.class == other.class && id == other.id
+  end
+
   private
 
   attr_reader :pg_connection

@@ -23,4 +23,8 @@ class SystemTestCase < TestCase
   def app
     Sinatra::Application
   end
+
+  def user
+    PgUser.new(super.id, pg_connection)
+  end
 end

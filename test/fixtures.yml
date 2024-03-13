@@ -4,6 +4,11 @@ users:
     # 'test'
     encrypted_password: $2a$12$3h3qyoaOag9y4HafevwnD.2bFz2lqjcWZFSu5UJU4V13xFYVhVNbO
 
+  second:
+    email: bruce@inbox.test
+    # 'test'
+    encrypted_password: $2a$12$3h3qyoaOag9y4HafevwnD.2bFz2lqjcWZFSu5UJU4V13xFYVhVNbO
+
 notes:
   first:
     text: some
@@ -16,3 +21,9 @@ notes:
     position: 1
     updated_at: "1970-01-01 08:30:00"
     user_id: 1
+
+  third:
+    text: third
+    position: 1
+    updated_at: "1970-01-01 09:00:00"
+    user_id: 2 # second

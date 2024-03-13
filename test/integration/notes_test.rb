@@ -5,11 +5,10 @@ require 'test_helper'
 class NotesApiTest < IntegrationTestCase
   def setup
     super
-    login_as fixtures[:users][:first]
+    login_as user
   end
 
   def test_creates
-    assert_equal fixtures[:notes].count, db_note_count
     text = 'note text'
     position = 1
 
@@ -17,37 +16,36 @@ class NotesApiTest < IntegrationTestCase
 
     assert last_response.ok?
     assert_json_response
-    assert_equal fixtures[:notes].count.next, db_note_count, 'Note must be created'
+    assert_equal user_notes.size.next, db_user_note_count, 'Note must be created'
     assert_equal text, json_response[:text]
     assert_equal position, json_response[:position]
   end
 
   def test_updates
-    note = fixtures[:notes][:first]
-    new_text = 'updated text'
+    note = PgNote.new(user_notes.first.id, pg_connection)
+    new_text = 'new'
     refute_equal new_text, note.text
 
     patch "/notes/#{note.id}", text: new_text
 
-    assert_equal new_text, pg_connection.exec_params('SELECT text FROM notes WHERE id = $1', [note.id]).getvalue(0, 0)
+    assert_equal new_text, note.text
     assert last_response.ok?
     assert_json_response
-    assert_equal PgNote.new(note.id, pg_connection).json_hash, json_response
+    assert_equal note.json_hash, json_response
   end
 
   def test_deletes
-    note = fixtures[:notes][:first]
-    assert_equal fixtures[:notes].count, db_note_count
+    note = user_notes.first
 
     delete "/notes/#{note.id}"
 
-    assert_equal fixtures[:notes].count - 1, db_note_count, 'Note should be deleted'
+    assert_equal user_notes.size - 1, db_user_note_count, 'Note should be deleted'
     assert last_response.ok?
   end
 
   def test_swaps
-    first = PgNote.new(fixtures[:notes][:first].id, pg_connection)
-    second = PgNote.new(fixtures[:notes][:second].id, pg_connection)
+    first = PgNote.new(user_notes[0].id, pg_connection)
+    second = PgNote.new(user_notes[1].id, pg_connection)
     cached_first_position = first.position
     cached_second_position = second.position
 
@@ -66,14 +64,14 @@ class NotesApiTest < IntegrationTestCase
   end
 
   def test_lists
-    fixture = fixtures[:notes][:first]
+    note = user_notes.first
 
     get '/notes'
 
     assert last_response.ok?
     assert_json_response
-    assert_equal fixtures[:notes].count, json_response.size
-    assert_equal PgNote.new(fixture.id, pg_connection).json_hash, json_response[1]
+    assert_equal user_notes.size, json_response.size
+    assert_equal PgNote.new(note.id, pg_connection).json_hash, json_response[1]
   end
 
   def test_prohibit_anonymous_user
@@ -101,9 +99,42 @@ class NotesApiTest < IntegrationTestCase
     assert last_response.forbidden?, 'Anonymous user must not be able to access PATCH /notes/:id/swap'
   end
 
-  private
+  def test_non_owned_note_cannot_be_updated
+    note = non_owned_note
+    original_text = note.text
 
-  def db_note_count
-    pg_connection.exec('SELECT COUNT(*) FROM notes').getvalue(0, 0)
+    patch "/notes/#{note.id}", text: 'new'
+
+    assert_equal original_text, note.text, 'Note text must be kept intact'
+    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
+    assert last_response.not_found?, "Response must be :not_found, but was :#{response_code_message}"
+  end
+
+  def test_non_owned_note_cannot_be_deleted
+    note = non_owned_note
+
+    delete "/notes/#{note.id}"
+
+    assert pg_connection.exec_params('SELECT id FROM notes WHERE id = $1', [note.id]).num_tuples.nonzero?,
+           'Note must not be deleted'
+    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
+    assert last_response.not_found?, "Response must be :not_found, but was :#{response_code_message}"
+  end
+
+  def test_non_owned_note_cannot_be_swapped
+    note = non_owned_note
+    original_position = note.position
+
+    patch "/notes/#{note.id}/swap", note_id: note.id
+
+    assert_equal original_position, note.position, 'Note position must be kept intact'
+    response_code_message = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
+    assert last_response.not_found?, "Response must be :not_found, but was :#{response_code_message}"
+  end
+
+  def non_owned_note
+    note = PgNote.new(fixtures[:notes][:third].id, pg_connection)
+    refute_equal note.user, user
+    note
   end
 end

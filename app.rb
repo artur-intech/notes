@@ -7,10 +7,11 @@ require 'ostruct'
 require 'warden'
 require 'bcrypt'
 require_relative 'lib/pg_note'
-require_relative 'lib/pg_notes'
+require_relative 'lib/pg_user_notes'
 require_relative 'lib/pg_users'
 require_relative 'lib/pg_user'
 require_relative 'lib/warden_password_strategy'
+require_relative 'lib/owned_note'
 
 def pg_connection
   ConnectionPool::Wrapper.new(size: 5, timeout: 5) do
@@ -30,8 +31,6 @@ configure :development do
   Sinatra::Application.reset!
   use Rack::Reloader
 end
-
-pg_notes = PgNotes.new(pg_connection)
 
 enable :sessions
 use Warden::Manager do |manager|
@@ -104,10 +103,20 @@ helpers do
 
     "page-#{result}"
   end
+
+  def current_user
+    env['warden'].user
+  end
+end
+
+error OwnedNote::OwnershipError do
+  status :not_found
 end
 
 get '/' do
   env['warden'].authenticate!
+
+  pg_notes = PgUserNotes.new(current_user.id, pg_connection)
   content_type :html
   headers['Content-Security-Policy'] = "default-src 'self'"
   erb :index, locals: { notes: pg_notes }
@@ -116,9 +125,10 @@ end
 post '/notes' do
   env['warden'].authenticate!
 
+  pg_notes = PgUserNotes.new(current_user.id, pg_connection)
   text = params[:text]
   position = params[:position].to_i
-  inserted_id = pg_notes.add(text, position, env['warden'].user.id)
+  inserted_id = pg_notes.add(text, position)
 
   pg_note = PgNote.new(inserted_id, pg_connection)
   pg_note.json
@@ -127,29 +137,30 @@ end
 patch '/notes/:id' do
   env['warden'].authenticate!
 
-  pg_note = PgNote.new(params[:id].to_i, pg_connection)
-  pg_note.update(params[:text])
-  pg_note.json
+  note = OwnedNote.new(user: current_user, note: PgNote.new(params[:id], pg_connection))
+  note.update(text: params[:text])
+  note.json
 end
 
 delete '/notes/:id' do
   env['warden'].authenticate!
 
-  pg_note = PgNote.new(params[:id], pg_connection)
+  pg_note = OwnedNote.new(user: current_user, note: PgNote.new(params[:id], pg_connection))
   pg_note.delete
 end
 
 patch '/notes/:id/swap' do
   env['warden'].authenticate!
 
-  pg_note = PgNote.new(params[:id], pg_connection)
-  pg_note.swap(params[:note_id])
+  pg_note = OwnedNote.new(user: current_user, note: PgNote.new(params[:id], pg_connection))
+  target_note = PgNote.new(params[:note_id], pg_connection)
+  pg_note.swap(target_note:)
 end
 
 get '/notes' do
   env['warden'].authenticate!
 
-  pg_notes = PgNotes.new(pg_connection)
+  pg_notes = PgUserNotes.new(current_user.id, pg_connection)
   pg_notes.json
 end
 

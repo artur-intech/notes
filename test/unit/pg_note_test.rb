@@ -84,4 +84,10 @@ class PgNoteTest < TestCase
     note = PgNote.new(id_as_str, nil)
     assert_equal note.id, 1
   end
+
+  def test_reports_user
+    fixture = fixtures[:notes][:first]
+    note = PgNote.new(fixture.id, pg_connection)
+    assert_equal PgUser.new(fixture.user_id, pg_connection), note.user
+  end
 end

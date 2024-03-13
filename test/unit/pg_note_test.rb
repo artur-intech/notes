@@ -52,13 +52,13 @@ class PgNoteTest < TestCase
   def test_swaps
     first = PgNote.new(fixtures[:notes][:first].id, pg_connection)
     second = PgNote.new(fixtures[:notes][:second].id, pg_connection)
-    cached_first_position = first.position
-    cached_second_position = second.position
+    original_first_position = first.position
+    original_second_position = second.position
 
     first.swap(second.id)
 
-    assert_equal cached_second_position, first.position
-    assert_equal cached_first_position, second.position
+    assert_equal original_second_position, first.position
+    assert_equal original_first_position, second.position
   end
 
   def test_represents_itself_as_json_hash

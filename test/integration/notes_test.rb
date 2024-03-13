@@ -46,14 +46,14 @@ class NotesApiTest < IntegrationTestCase
   def test_swaps
     first = PgNote.new(user_notes[0].id, pg_connection)
     second = PgNote.new(user_notes[1].id, pg_connection)
-    cached_first_position = first.position
-    cached_second_position = second.position
+    original_first_position = first.position
+    original_second_position = second.position
 
     patch "/notes/#{first.id}/swap", { note_id: second.id }
 
     assert_response :ok
-    assert_equal cached_second_position, first.position
-    assert_equal cached_first_position, second.position
+    assert_equal original_second_position, first.position
+    assert_equal original_first_position, second.position
   end
 
   def test_csp_header

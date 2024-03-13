@@ -2,11 +2,12 @@
 
 if ENV['COVERAGE']
   require 'simplecov'
-  require 'coveralls'
+  require 'simplecov_json_formatter'
 
   SimpleCov.formatters = [
     SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
+    SimpleCov::Formatter::JSONFormatter
+    # Coveralls::SimpleCov::Formatter
   ]
   SimpleCov.start do
     add_filter '/test/'

@@ -150,6 +150,7 @@ DEPENDENCIES
   rubocop
   selenium-webdriver
   simplecov
+  simplecov_json_formatter
   sinatra
   solargraph
   warden

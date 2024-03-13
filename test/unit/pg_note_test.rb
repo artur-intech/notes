@@ -78,4 +78,10 @@ class PgNoteTest < TestCase
 
     assert_equal pg_note.json_hash.to_json, actual
   end
+
+  def test_type_casts_id_to_int
+    id_as_str = '1'
+    note = PgNote.new(id_as_str, nil)
+    assert_equal note.id, 1
+  end
 end

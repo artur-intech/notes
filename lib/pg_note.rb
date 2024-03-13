@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class PgNote
-  attr_reader :id
+  attr_reader :pg_connection
 
   def initialize(id, pg_connection)
     @id = id
     @pg_connection = pg_connection
+  end
+
+  def id
+    @id.to_i
   end
 
   def text

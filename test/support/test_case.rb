@@ -29,7 +29,7 @@ class TestCase < Minitest::Test
   end
 
   def user_notes
-    fixtures[:notes].select { |_k, note| note.user_id == user.id }.values
+    fixtures[:notes].select { |_k, note| note.user_id == user.id }.values.reverse
   end
 
   def db_user_note_count

@@ -64,7 +64,7 @@ class NotesApiTest < IntegrationTestCase
     get '/notes'
 
     assert_response :ok
-    expected = user_notes.reverse.map do |note|
+    expected = user_notes.map do |note|
       PgNote.new(note.id, pg_connection).json_hash
     end
     assert_json_response(expected)

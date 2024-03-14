@@ -40,7 +40,7 @@ class PgUserNotesTest < TestCase
 
     actual = pg_notes.json
 
-    assert_equal user_notes.reverse.map { |note| { id: note.id } }.to_json, actual
+    assert_equal user_notes.map { |note| { id: note.id } }.to_json, actual
   end
 
   def test_reports_updated_at

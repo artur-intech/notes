@@ -15,9 +15,8 @@ class NotesApiTest < IntegrationTestCase
     post('/notes', text:, position:)
 
     assert_response :ok
-    assert_json_response
+    assert_json_response(PgNote.new(fixtures[:notes].size.next, pg_connection).json_hash)
     assert_equal user_notes.size.next, db_user_note_count, 'Note must be created'
-    assert_equal PgNote.new(fixtures[:notes].size.next, pg_connection).json_hash, json_response
   end
 
   def test_updates
@@ -29,8 +28,7 @@ class NotesApiTest < IntegrationTestCase
 
     assert_equal new_text, note.text
     assert_response :ok
-    assert_json_response
-    assert_equal note.json_hash, json_response
+    assert_json_response(note.json_hash)
   end
 
   def test_deletes
@@ -63,14 +61,13 @@ class NotesApiTest < IntegrationTestCase
   end
 
   def test_lists
-    note = user_notes.first
-
     get '/notes'
 
     assert_response :ok
-    assert_json_response
-    assert_equal user_notes.size, json_response.size
-    assert_equal PgNote.new(note.id, pg_connection).json_hash, json_response[1]
+    expected = user_notes.reverse.map do |note|
+      PgNote.new(note.id, pg_connection).json_hash
+    end
+    assert_json_response(expected)
   end
 
   def test_prohibit_anonymous_user

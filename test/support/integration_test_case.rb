@@ -19,8 +19,9 @@ class IntegrationTestCase < TestCase
     JSON.parse(last_response.body, symbolize_names: true)
   end
 
-  def assert_json_response
+  def assert_json_response(expected_hash)
     assert_equal Rack::Mime.mime_type('.json'), last_response['content-type']
+    assert_equal expected_hash, json_response
   end
 
   def user

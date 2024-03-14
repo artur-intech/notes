@@ -17,8 +17,7 @@ class NotesApiTest < IntegrationTestCase
     assert_response :ok
     assert_json_response
     assert_equal user_notes.size.next, db_user_note_count, 'Note must be created'
-    assert_equal text, json_response[:text]
-    assert_equal position, json_response[:position]
+    assert_equal PgNote.new(fixtures[:notes].size.next, pg_connection).json_hash, json_response
   end
 
   def test_updates

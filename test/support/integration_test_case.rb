@@ -15,10 +15,6 @@ class IntegrationTestCase < TestCase
     Sinatra::Application
   end
 
-  def json_response
-    JSON.parse(last_response.body, symbolize_names: true)
-  end
-
   def user
     PgUser.new(super.id, pg_connection)
   end

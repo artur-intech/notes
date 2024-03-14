@@ -46,6 +46,8 @@ module Assertions
 
   def assert_json_response(expected_hash)
     assert_equal Rack::Mime.mime_type('.json'), last_response['content-type']
+
+    json_response = JSON.parse(last_response.body, symbolize_names: true)
     assert_equal expected_hash, json_response
   end
 

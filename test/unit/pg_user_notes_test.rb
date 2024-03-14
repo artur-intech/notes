@@ -4,12 +4,10 @@ require 'test_helper'
 
 class PgUserNotesTest < TestCase
   def test_adds_new_note
-    original_count = user_notes.size
-    pg_notes = PgUserNotes.new(user.id, pg_connection)
-
-    pg_notes.add('whatever', 1)
-
-    assert_equal original_count.next, db_user_note_count
+    notes = PgUserNotes.new(user.id, pg_connection)
+    assert_difference proc { db_user_note_count } do
+      notes.add('any', 1)
+    end
   end
 
   def test_iterates_itself

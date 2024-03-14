@@ -12,21 +12,25 @@ class NotesApiTest < IntegrationTestCase
     text = 'note text'
     position = 1
 
-    post('/notes', text:, position:)
-
+    assert_difference proc { db_user_note_count } do
+      post('/notes', text:, position:)
+    end
     assert_response :ok
     assert_json_response(PgNote.new(fixtures[:notes].size.next, pg_connection).json_hash)
-    assert_equal user_notes.size.next, db_user_note_count, 'Note must be created'
   end
 
   def test_updates
     note = PgNote.new(user_notes.first.id, pg_connection)
     new_text = 'new'
-    refute_equal new_text, note.text
 
-    patch "/notes/#{note.id}", text: new_text
+    assert_change proc {
+                    pg_connection.exec_params('SELECT updated_at FROM notes WHERE id = $1', [note.id]).getvalue(0, 0)
+                  } do
+      assert_change_to proc { note.text }, new_text do
+        patch "/notes/#{note.id}", text: new_text
+      end
+    end
 
-    assert_equal new_text, note.text
     assert_response :ok
     assert_json_response(note.json_hash)
   end
@@ -34,9 +38,9 @@ class NotesApiTest < IntegrationTestCase
   def test_deletes
     note = user_notes.first
 
-    delete "/notes/#{note.id}"
-
-    assert_equal user_notes.size - 1, db_user_note_count, 'Note must be deleted'
+    assert_difference proc { db_user_note_count }, -1 do
+      delete "/notes/#{note.id}"
+    end
     assert_response :ok
   end
 
@@ -96,34 +100,38 @@ class NotesApiTest < IntegrationTestCase
   end
 
   def test_non_owned_note_cannot_be_updated
+    new_text = 'new'
     note = non_owned_note
-    original_text = note.text
+    refute_equal new_text, note.text
 
-    patch "/notes/#{note.id}", text: 'new'
-
-    assert_equal original_text, note.text, 'Note text must be kept intact'
+    assert_no_change proc { note.text } do
+      patch "/notes/#{note.id}", text: new_text
+    end
     assert_response :not_found
   end
 
   def test_non_owned_note_cannot_be_deleted
     note = non_owned_note
 
-    delete "/notes/#{note.id}"
-
-    assert pg_connection.exec_params('SELECT id FROM notes WHERE id = $1', [note.id]).num_tuples.nonzero?,
-           'Note must not be deleted'
+    assert_no_difference proc { db_note_count }, 'Note must not be deleted' do
+      delete "/notes/#{note.id}"
+    end
     assert_response :not_found
   end
 
   def test_non_owned_note_cannot_be_swapped
     note = non_owned_note
-    original_position = note.position
+    target_note = PgNote.new(fixtures[:notes][:first].id, pg_connection)
+    refute_equal note.id, target_note.id
+    refute_equal note.position, target_note.position
 
-    patch "/notes/#{note.id}/swap", note_id: note.id
-
-    assert_equal original_position, note.position, 'Note position must be kept intact'
+    assert_no_change proc { note.position } do
+      patch "/notes/#{note.id}/swap", note_id: target_note.id
+    end
     assert_response :not_found
   end
+
+  private
 
   def non_owned_note
     note = PgNote.new(fixtures[:notes][:third].id, pg_connection)

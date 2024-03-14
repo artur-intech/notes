@@ -16,37 +16,20 @@ class PgNoteTest < TestCase
   end
 
   def test_updates_itself
-    note = fixtures[:notes][:first]
+    note = PgNote.new(fixtures[:notes][:first].id, pg_connection)
     new_text = 'new text'
-    refute_equal new_text, note.text
-    assert note.updated_at
-    pg_note = PgNote.new(note.id, pg_connection)
 
-    pg_note.update(new_text)
-
-    assert_equal new_text, pg_note.text
-    refute_equal note.updated_at,
-                 pg_connection.exec_params('SELECT updated_at FROM notes WHERE id = $1', [note.id]).getvalue(0, 0),
-                 'Last update date must be updated'
+    assert_change_to proc { note.text }, new_text do
+      note.update(new_text)
+    end
   end
 
   def test_deletes_itself
-    note = fixtures[:notes][:first]
-    pg_note = PgNote.new(note.id, pg_connection)
+    pg_note = PgNote.new(fixtures[:notes][:first].id, pg_connection)
 
-    pg_note.delete
-
-    assert pg_connection.exec_params('SELECT id FROM notes WHERE id = $1', [note.id]).num_tuples.zero?
-  end
-
-  def test_keeps_others_intact_when_deleting
-    note = fixtures[:notes][:first]
-    other = fixtures[:notes][:second]
-    pg_note = PgNote.new(note.id, pg_connection)
-
-    pg_note.delete
-
-    refute pg_connection.exec_params('SELECT id FROM notes WHERE id = $1', [other.id]).num_tuples.zero?
+    assert_difference proc { db_note_count }, -1 do
+      pg_note.delete
+    end
   end
 
   def test_swaps

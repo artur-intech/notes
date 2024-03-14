@@ -6,7 +6,7 @@ class PgUserNotesTest < TestCase
   def test_adds_new_note
     notes = PgUserNotes.new(user.id, pg_connection)
     assert_difference proc { db_user_note_count } do
-      notes.add('any', 1)
+      assert_equal fixtures[:notes].size.next, notes.add('any', 1)
     end
   end
 

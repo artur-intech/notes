@@ -5,7 +5,6 @@ todo
 - full screen api for editing
 - mobile support (https://developer.mozilla.org/en-US/docs/Web/API/Touch_events/Using_Touch_Events)
 - archive? trash bin?
-- dockerize
 - validate input params
 - do not reload note list after deletion
 - What does pressing ESC do when editing? Currently it is buggy.
@@ -17,3 +16,4 @@ done
 - disable inline css and js
 - Sync with server (server-sent events?)
 - yaml fixtures
+- dockerize

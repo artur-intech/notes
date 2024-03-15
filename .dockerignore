@@ -1,0 +1,6 @@
+.git
+.github
+.vscode
+.ruby-lsp
+.rubocop.yml
+test

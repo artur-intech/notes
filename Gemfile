@@ -23,5 +23,5 @@ group :test do
   gem 'rubocop'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
-  gem 'simplecov_json_formatter'
+  gem 'simplecov_json_formatter', require: false
 end

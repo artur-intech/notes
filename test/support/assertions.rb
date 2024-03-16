@@ -55,4 +55,9 @@ module Assertions
     actual = Rack::Utils::HTTP_STATUS_CODES[last_response.status].downcase
     assert last_response.public_send("#{expected}?"), "Response must be :#{expected}, but was :#{actual}"
   end
+
+  def assert_array_match(expected, actual)
+    msg = %(Arrays must match, but they do not: "[#{expected.join(', ')}]", "[#{actual.join(', ')}]")
+    assert expected.difference(actual).empty?, msg
+  end
 end

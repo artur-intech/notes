@@ -119,7 +119,7 @@ get '/' do
   pg_notes = PgUserNotes.new(current_user.id, pg_connection)
   content_type :html
   headers['Content-Security-Policy'] = "default-src 'self'"
-  erb :index, locals: { notes: pg_notes }
+  erb :index, locals: { notes: pg_notes.fetch }
 end
 
 post '/notes' do

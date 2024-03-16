@@ -14,8 +14,7 @@ class PgUserNotesTest < TestCase
     pg_notes = PgUserNotes.new(user.id, pg_connection, proc do |id|
                                                          id
                                                        end)
-    actual = pg_notes.to_a
-    assert_empty user_notes.map(&:id).difference(actual)
+    assert_empty user_notes.map(&:id).difference(pg_notes.fetch)
   end
 
   def test_biggest_position_comes_first
@@ -26,7 +25,7 @@ class PgUserNotesTest < TestCase
     pg_notes.add('whatever', 2)
     pg_notes = PgUserNotes.new(user.id, pg_connection)
 
-    actual = pg_notes.collect(&:position)
+    actual = pg_notes.fetch.collect(&:position)
 
     assert_equal([3, 2, 1], actual)
   end
@@ -53,7 +52,7 @@ class PgUserNotesTest < TestCase
 
   def test_notes_from_other_users_must_be_absent
     other_user_note_id = fixtures[:notes][:third].id
-    actual = PgUserNotes.new(user.id, pg_connection).to_a.collect(&:id)
+    actual = PgUserNotes.new(user.id, pg_connection).fetch.collect(&:id)
     refute_includes actual, other_user_note_id
   end
 end

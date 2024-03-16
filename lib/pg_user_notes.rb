@@ -3,10 +3,10 @@
 class PgUserNotes
   include Enumerable
 
-  def initialize(user_id, pg_connection, pg_note_by_result_row = default_pg_note_by_result_row)
+  def initialize(user_id, pg_connection, note_by_id = proc { |id| PgNote.new(id, pg_connection) })
     @user_id = user_id
     @pg_connection = pg_connection
-    @pg_note_by_result_row = pg_note_by_result_row
+    @note_by_id = note_by_id
   end
 
   def add(text, position)
@@ -20,7 +20,7 @@ class PgUserNotes
   def each
     pg_connection.exec_params('SELECT * FROM notes WHERE user_id = $1 ORDER BY position DESC', [user_id]) do |result|
       result.each do |pg_row|
-        yield pg_note_by_result_row.call(pg_row)
+        yield note_by_id.call(pg_row['id'])
       end
     end
   end
@@ -43,9 +43,5 @@ class PgUserNotes
 
   private
 
-  attr_reader :pg_connection, :pg_note_by_result_row, :user_id
-
-  def default_pg_note_by_result_row
-    proc { |pg_row| PgNote.new(pg_row['id'], pg_connection) }
-  end
+  attr_reader :pg_connection, :note_by_id, :user_id
 end

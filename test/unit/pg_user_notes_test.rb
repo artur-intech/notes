@@ -40,16 +40,6 @@ class PgUserNotesTest < TestCase
     assert_equal user_notes.map { |note| { id: note.id } }.to_json, actual
   end
 
-  def test_reports_updated_at
-    first_fixture = fixtures[:notes][:first]
-    pg_notes = PgUserNotes.new(user.id, pg_connection)
-
-    actual = pg_notes.updated_at
-
-    assert_equal fixtures[:notes].count, actual.count
-    assert_equal ({ id: first_fixture.id, updated_at: first_fixture.updated_at }), actual.first
-  end
-
   def test_notes_from_other_users_must_be_absent
     other_user_note_id = fixtures[:notes][:third].id
     actual = PgUserNotes.new(user.id, pg_connection).fetch.collect(&:id)

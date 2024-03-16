@@ -10,7 +10,7 @@ class PgUserNotesTest < TestCase
     end
   end
 
-  def test_iterates_itself
+  def test_fetches
     expected = user_notes.map(&:id)
     actual = PgUserNotes.new(user.id, pg_connection, proc { |id| id }).fetch
     assert_array_match expected, actual

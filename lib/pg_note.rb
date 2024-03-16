@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PgNote
+  class NotFoundError < StandardError; end
+
   attr_reader :pg_connection
 
   def initialize(id, pg_connection, user_by_id = default_user_by_id)
@@ -18,11 +20,13 @@ class PgNote
   end
 
   def update(text)
-    pg_connection.exec_params('UPDATE notes SET text = $2, updated_at = NOW() WHERE id = $1', [id, text])
+    result = pg_connection.exec_params('UPDATE notes SET text = $2, updated_at = NOW() WHERE id = $1', [id, text])
+    raise NotFoundError if result.cmdtuples.zero?
   end
 
   def delete
-    pg_connection.exec_params('DELETE FROM notes WHERE id = $1', [id])
+    result = pg_connection.exec_params('DELETE FROM notes WHERE id = $1', [id])
+    raise NotFoundError if result.cmdtuples.zero?
   end
 
   def position
@@ -54,7 +58,10 @@ class PgNote
   attr_reader :user_by_id
 
   def user_id
-    pg_connection.exec_params('SELECT user_id FROM notes WHERE id = $1', [id]).getvalue(0, 0)
+    result = pg_connection.exec_params('SELECT user_id FROM notes WHERE id = $1', [id])
+    raise NotFoundError if result.ntuples.zero?
+
+    result.getvalue(0, 0)
   end
 
   def default_user_by_id

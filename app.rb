@@ -113,6 +113,10 @@ error OwnedNote::OwnershipError do
   status :not_found
 end
 
+error PgNote::NotFoundError do
+  status :not_found
+end
+
 get '/' do
   env['warden'].authenticate!
 

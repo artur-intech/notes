@@ -73,4 +73,21 @@ class PgNoteTest < TestCase
     note = PgNote.new(fixture.id, pg_connection)
     assert_equal PgUser.new(fixture.user_id, pg_connection), note.user
   end
+
+  def test_note_not_found
+    nonexistent_id = 99
+    note = PgNote.new(nonexistent_id, pg_connection)
+
+    assert_raises PgNote::NotFoundError do
+      note.user
+    end
+
+    assert_raises PgNote::NotFoundError do
+      note.update('any')
+    end
+
+    assert_raises PgNote::NotFoundError do
+      note.delete
+    end
+  end
 end

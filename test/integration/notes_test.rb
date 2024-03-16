@@ -131,6 +131,17 @@ class NotesApiTest < IntegrationTestCase
     assert_response :not_found
   end
 
+  def test_nonexistent_note
+    patch '/notes/nonexistent'
+    assert_response :not_found
+
+    delete '/notes/nonexistent'
+    assert_response :not_found
+
+    patch '/notes/nonexistent/swap'
+    assert_response :not_found
+  end
+
   private
 
   def non_owned_note

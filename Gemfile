@@ -20,7 +20,7 @@ group :test do
   gem 'coveralls_reborn', require: false
   gem 'minitest'
   gem 'rack-test'
-  gem 'rubocop'
+  gem 'rubocop', require: false
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'simplecov_json_formatter', require: false

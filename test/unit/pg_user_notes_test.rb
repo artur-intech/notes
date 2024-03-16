@@ -11,10 +11,9 @@ class PgUserNotesTest < TestCase
   end
 
   def test_iterates_itself
-    pg_notes = PgUserNotes.new(user.id, pg_connection, proc do |id|
-                                                         id
-                                                       end)
-    assert_empty user_notes.map(&:id).difference(pg_notes.fetch)
+    expected = user_notes.map(&:id)
+    actual = PgUserNotes.new(user.id, pg_connection, proc { |id| id }).fetch
+    assert_array_match expected, actual
   end
 
   def test_biggest_position_comes_first

@@ -15,14 +15,14 @@ class AuthenticationIntegrationTest < IntegrationTestCase
 
     get '/sign_out'
 
-    refute last_request.env['warden'].authenticated?, 'User must be signed out'
+    assert last_request.env['warden'].unauthenticated?, 'User must be signed out'
     assert_root_redirect
   end
 
   def test_nonexistent_email
     post '/', { email: 'nonexistent', password: right_password }
 
-    refute last_request.env['warden'].authenticated?, 'User must be signed out'
+    assert last_request.env['warden'].unauthenticated?, 'User must be signed out'
     assert_response :forbidden
   end
 end

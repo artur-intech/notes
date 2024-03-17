@@ -25,6 +25,7 @@ class TestCase < Minitest::Test
     'test'
   end
   alias right_password plain_password
+  alias valid_password plain_password
 
   def user
     fixtures[:users][:first]
@@ -41,4 +42,14 @@ class TestCase < Minitest::Test
   def db_note_count
     pg_connection.exec('SELECT COUNT(*) FROM notes').getvalue(0, 0)
   end
+
+  def db_user_count
+    pg_connection.exec('SELECT COUNT(*) FROM users').getvalue(0, 0)
+  end
+
+  def random_email
+    local_part = SecureRandom.alphanumeric(5).downcase
+    "#{local_part}@inbox.test"
+  end
+  alias valid_email random_email
 end

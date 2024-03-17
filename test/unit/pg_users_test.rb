@@ -22,6 +22,10 @@ class PgUserTest < TestCase
     assert_equal 'Email is already taken.', error.message
   end
 
+  def test_fetches_user_by_email
+    assert_equal PgUser.new(user.id, pg_connection), PgUsers.new(pg_connection).by_email(user.email)
+  end
+
   private
 
   def db_password(user_id)

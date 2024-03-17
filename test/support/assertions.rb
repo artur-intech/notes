@@ -57,7 +57,7 @@ module Assertions
   end
 
   def assert_array_match(expected, actual)
-    msg = %(Arrays must match, but they do not: "[#{expected.join(', ')}]", "[#{actual.join(', ')}]")
+    msg = %(Arrays must match, but they do not: #{expected.inspect}, #{actual.inspect})
     assert expected.difference(actual).empty?, msg
   end
 

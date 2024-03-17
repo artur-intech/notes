@@ -2,8 +2,3 @@ plugins:
   rubocop:
     enabled: true
     channel: rubocop-1-56-3
-  csslint:
-    enabled: true
-  eslint:
-    enabled: true
-    channel: "eslint-8"

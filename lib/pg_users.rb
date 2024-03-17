@@ -9,11 +9,9 @@ class PgUsers
     end
   end
 
-  def initialize(pg_connection)
+  def initialize(pg_connection, user_by_id = proc { |id| PgUser.new(id, pg_connection) })
     @pg_connection = pg_connection
-    @user_by_id = proc do |id|
-      PgUser.new(id, pg_connection)
-    end
+    @user_by_id = user_by_id
   end
 
   def by_email(email)

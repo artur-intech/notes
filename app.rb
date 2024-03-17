@@ -54,7 +54,7 @@ end
 Warden::Strategies.add(:password, WardenPasswordStrategy)
 
 post '/' do
-  env['warden'].authenticate!
+  warden.authenticate!
   redirect '/'
 end
 
@@ -82,7 +82,7 @@ post '/unauthenticated' do
 end
 
 get '/sign_out' do
-  env['warden'].logout
+  warden.logout
   redirect '/'
 end
 
@@ -105,7 +105,11 @@ helpers do
   end
 
   def current_user
-    env['warden'].user
+    warden.user
+  end
+
+  def warden
+    env['warden']
   end
 end
 
@@ -118,7 +122,7 @@ error PgNote::NotFoundError do
 end
 
 get '/' do
-  env['warden'].authenticate!
+  warden.authenticate!
 
   pg_notes = PgUserNotes.new(current_user.id, pg_connection)
   content_type :html
@@ -127,7 +131,7 @@ get '/' do
 end
 
 post '/notes' do
-  env['warden'].authenticate!
+  warden.authenticate!
 
   pg_notes = PgUserNotes.new(current_user.id, pg_connection)
   text = params[:text]
@@ -139,7 +143,7 @@ post '/notes' do
 end
 
 patch '/notes/:id' do
-  env['warden'].authenticate!
+  warden.authenticate!
 
   note = OwnedNote.new(user: current_user, note: PgNote.new(params[:id], pg_connection))
   note.update(text: params[:text])
@@ -147,14 +151,14 @@ patch '/notes/:id' do
 end
 
 delete '/notes/:id' do
-  env['warden'].authenticate!
+  warden.authenticate!
 
   pg_note = OwnedNote.new(user: current_user, note: PgNote.new(params[:id], pg_connection))
   pg_note.delete
 end
 
 patch '/notes/:id/swap' do
-  env['warden'].authenticate!
+  warden.authenticate!
 
   pg_note = OwnedNote.new(user: current_user, note: PgNote.new(params[:id], pg_connection))
   target_note = PgNote.new(params[:note_id], pg_connection)
@@ -162,14 +166,14 @@ patch '/notes/:id/swap' do
 end
 
 get '/notes' do
-  env['warden'].authenticate!
+  warden.authenticate!
 
   pg_notes = PgUserNotes.new(current_user.id, pg_connection)
   pg_notes.json
 end
 
 get '/sse', provides: 'text/event-stream' do # rubocop:disable Metrics/BlockLength
-  env['warden'].authenticate!
+  warden.authenticate!
   cache_control :no_cache
 
   initial_ids = []
@@ -218,7 +222,7 @@ post '/sign_up' do
   begin
     id = users.add(email: params[:email], plain_password: params[:password])
     user = PgUser.new(id, pg_connection)
-    env['warden'].set_user(user)
+    warden.set_user(user)
     redirect '/'
   rescue PgUsers::ExistingUserError => e
     content_type :html

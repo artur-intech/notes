@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PgUsers
-  class UserNotFound < StandardError; end
+  class UserNotFoundError < StandardError; end
 
   class ExistingUserError < StandardError
     def initialize
@@ -18,7 +18,7 @@ class PgUsers
 
   def by_email(email)
     result = pg_connection.exec_params('SELECT id FROM users WHERE email = $1', [email])
-    raise UserNotFound if result.num_tuples.zero?
+    raise UserNotFoundError if result.num_tuples.zero?
 
     id = result.getvalue(0, 0)
     user_by_id.call(id)

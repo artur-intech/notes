@@ -10,7 +10,7 @@ class WardenPasswordStrategy < Warden::Strategies::Base
     pg_user = pg_users.by_email(params['email'])
 
     success!(pg_user) if pg_user.can_be_authenticated?(params['password'])
-  rescue PgUsers::UserNotFound
+  rescue PgUsers::UserNotFoundError
     fail!('User with the provided email does not exist.')
   end
 end

@@ -23,6 +23,8 @@
         <% if env['warden'].authenticated? %>
             <%= env['warden'].user.email %>
             <a href="<%= url('/sign_out') %>">Sign out</a>
+        <% else %>
+            <a href="/sign_up">Sign up</a>
         <% end %>
         <%= yield %>
     </main>

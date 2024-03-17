@@ -3,6 +3,12 @@
 class PgUsers
   class UserNotFound < StandardError; end
 
+  class ExistingUserError < StandardError
+    def initialize
+      super('Email is already taken.')
+    end
+  end
+
   def initialize(pg_connection)
     @pg_connection = pg_connection
     @user_by_id = proc do |id|
@@ -18,7 +24,21 @@ class PgUsers
     user_by_id.call(id)
   end
 
+  def add(email:, plain_password:)
+    raise ExistingUserError if existing_email?(email)
+
+    encrypted_password = BCrypt::Password.create(plain_password)
+
+    sql = 'INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id'
+    result = pg_connection.exec_params(sql, [email, encrypted_password])
+    result.getvalue(0, 0)
+  end
+
   private
 
   attr_reader :pg_connection, :user_by_id
+
+  def existing_email?(email)
+    pg_connection.exec_params('SELECT id FROM users WHERE email = $1', [email]).ntuples.nonzero?
+  end
 end

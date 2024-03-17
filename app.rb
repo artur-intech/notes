@@ -206,3 +206,22 @@ get '/sse', provides: 'text/event-stream' do # rubocop:disable Metrics/BlockLeng
     stream.close
   end
 end
+
+get '/sign_up' do
+  content_type :html
+  erb :sign_up, locals: { email: nil, password: nil, error_message: nil }
+end
+
+post '/sign_up' do
+  users = PgUsers.new(pg_connection)
+
+  begin
+    id = users.add(email: params[:email], plain_password: params[:password])
+    user = PgUser.new(id, pg_connection)
+    env['warden'].set_user(user)
+    redirect '/'
+  rescue PgUsers::ExistingUserError => e
+    content_type :html
+    erb :sign_up, locals: { email: params[:email], password: params[:password], error_message: e.message }
+  end
+end

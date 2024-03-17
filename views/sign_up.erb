@@ -1,0 +1,9 @@
+<h1>Sign up</h1>
+<p>
+    <%= error_message %>
+</p>
+<form url="<%= url('/sign_up') %>" method="post">
+    <input name="email" value="<%= email %>" placeholder="Email" required autofocus type="email">
+    <input name="password" value="<%= password %>" placeholder="Password" required type="password">
+    <button type="submit">Sign up</button>
+</form>

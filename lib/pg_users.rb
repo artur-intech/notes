@@ -23,7 +23,7 @@ class PgUsers
   end
 
   def add(email:, plain_password:)
-    raise ExistingUserError if existing_email?(email)
+    raise ExistingUserError if existing_user?(email)
 
     encrypted_password = BCrypt::Password.create(plain_password)
 
@@ -36,7 +36,7 @@ class PgUsers
 
   attr_reader :pg_connection, :user_by_id
 
-  def existing_email?(email)
+  def existing_user?(email)
     pg_connection.exec_params('SELECT id FROM users WHERE email = $1', [email]).ntuples.nonzero?
   end
 end

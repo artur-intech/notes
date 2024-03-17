@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Assertions
   def assert_difference(expression, expected = 1, &block)
     original_value = expression.call
@@ -31,8 +33,8 @@ module Assertions
   end
 
   # Minitest already has `assert_same`
-  def assert_no_change(expression, message = nil, &block)
-    assert_no_difference(expression, message, &block)
+  def assert_no_change(expression, message = nil, &)
+    assert_no_difference(expression, message, &)
   end
 
   def assert_no_difference(expression, message = nil, &block)

@@ -15,9 +15,9 @@ require_relative 'lib/owned_note'
 
 def pg_connection
   ConnectionPool::Wrapper.new(size: 5, timeout: 5) do
-    pg_connection = PG::Connection.new(host: ENV['PG_HOST'],
-                                       user: ENV['PG_USER'],
-                                       password: ENV['PG_PASSWORD'])
+    pg_connection = PG::Connection.new(host: ENV.fetch('PG_HOST', nil),
+                                       user: ENV.fetch('PG_USER', nil),
+                                       password: ENV.fetch('PG_PASSWORD', nil))
     pg_connection.type_map_for_results = PG::BasicTypeMapForResults.new(pg_connection)
     pg_connection.type_map_for_queries = PG::BasicTypeMapForQueries.new(pg_connection)
     pg_connection

@@ -71,7 +71,7 @@ class OwnedNoteTest < TestCase
 
   private
 
-  def assert_ownership_error(&block)
-    assert_raises OwnedNote::OwnershipError, &block
+  def assert_ownership_error(&)
+    assert_raises(OwnedNote::OwnershipError, &)
   end
 end

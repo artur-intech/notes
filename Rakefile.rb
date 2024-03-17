@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/test_task'
 require 'pg'
 
@@ -8,9 +10,9 @@ Minitest::TestTask.create do |t|
 end
 
 task :create_db do
-  pg_host = ENV['PG_HOST']
-  pg_user = ENV['PG_USER']
-  pg_password = ENV['PG_PASSWORD']
+  pg_host = ENV.fetch('PG_HOST', nil)
+  pg_user = ENV.fetch('PG_USER', nil)
+  pg_password = ENV.fetch('PG_PASSWORD', nil)
   pg_database = pg_user
 
   `PGPASSWORD=#{pg_password} createdb -h #{pg_host} -U #{pg_user} #{pg_database}`
@@ -22,18 +24,18 @@ task :create_db do
 end
 
 task :drop_db do
-  pg_host = ENV['PG_HOST']
-  pg_user = ENV['PG_USER']
-  pg_password = ENV['PG_PASSWORD']
+  pg_host = ENV.fetch('PG_HOST', nil)
+  pg_user = ENV.fetch('PG_USER', nil)
+  pg_password = ENV.fetch('PG_PASSWORD', nil)
   pg_database = pg_user
 
   `PGPASSWORD=#{pg_password} dropdb -h #{pg_host} -U #{pg_user} -f #{pg_database}`
 end
 
 task :load_db_schema do
-  pg_host = ENV['PG_HOST']
-  pg_user = ENV['PG_USER']
-  pg_password = ENV['PG_PASSWORD']
+  pg_host = ENV.fetch('PG_HOST', nil)
+  pg_user = ENV.fetch('PG_USER', nil)
+  pg_password = ENV.fetch('PG_PASSWORD', nil)
 
   pg_connection = PG::Connection.new(host: pg_host,
                                      user: pg_user,
@@ -42,9 +44,9 @@ task :load_db_schema do
 end
 
 task :load_db_dummy_data do
-  pg_host = ENV['PG_HOST']
-  pg_user = ENV['PG_USER']
-  pg_password = ENV['PG_PASSWORD']
+  pg_host = ENV.fetch('PG_HOST', nil)
+  pg_user = ENV.fetch('PG_USER', nil)
+  pg_password = ENV.fetch('PG_PASSWORD', nil)
 
   pg_connection = PG::Connection.new(host: pg_host,
                                      user: pg_user,

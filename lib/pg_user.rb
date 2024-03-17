@@ -22,6 +22,10 @@ class PgUser
     self.class == other.class && id == other.id
   end
 
+  def inspect
+    "#{id}, #{email}"
+  end
+
   private
 
   attr_reader :pg_connection

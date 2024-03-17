@@ -12,19 +12,21 @@ class Fixtures
     parsed_yaml = YAML.load_file(file_path)
     parsed_yaml.transform_keys!(&:to_sym)
 
-    parsed_yaml.each do |table, name_columns_values|
-      name_columns_values.transform_keys!(&:to_sym)
+    pg_connection.transaction do
+      parsed_yaml.each do |table, name_columns_values|
+        name_columns_values.transform_keys!(&:to_sym)
 
-      name_columns_values.each do |name, columns_values|
-        columns_values.each do |column, value|
-          parsed_yaml[table][name][column] = type_casted_value(value)
+        name_columns_values.each do |name, columns_values|
+          columns_values.each do |column, value|
+            parsed_yaml[table][name][column] = type_casted_value(value)
+          end
+
+          parsed_yaml[table][name] = OpenStruct.new(columns_values)
+
+          sql = sql(table, columns_values.keys, columns_values.values.count)
+          id = pg_connection.exec_params(sql, columns_values.values).getvalue(0, 0)
+          parsed_yaml[table][name].id = id
         end
-
-        parsed_yaml[table][name] = OpenStruct.new(columns_values)
-
-        sql = sql(table, columns_values.keys, columns_values.values.count)
-        id = pg_connection.exec_params(sql, columns_values.values).getvalue(0, 0)
-        parsed_yaml[table][name].id = id
       end
     end
 

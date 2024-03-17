@@ -28,3 +28,4 @@ require 'support/fixtures'
 
 Capybara.app = Sinatra::Application
 Capybara.server = :puma, { Silent: true }
+BCrypt::Engine.cost = 1

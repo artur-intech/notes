@@ -25,11 +25,4 @@ class AuthenticationIntegrationTest < IntegrationTestCase
     refute last_request.env['warden'].authenticated?, 'User must be signed out'
     assert_response :forbidden
   end
-
-  private
-
-  def assert_root_redirect
-    assert_response :redirect
-    assert_equal '/', URI(last_response.location).path, 'Response must redirect to the root path'
-  end
 end

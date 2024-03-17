@@ -60,4 +60,9 @@ module Assertions
     msg = %(Arrays must match, but they do not: "[#{expected.join(', ')}]", "[#{actual.join(', ')}]")
     assert expected.difference(actual).empty?, msg
   end
+
+  def assert_root_redirect
+    assert_response :redirect
+    assert_equal '/', URI(last_response.location).path, 'Response must redirect to the root path'
+  end
 end

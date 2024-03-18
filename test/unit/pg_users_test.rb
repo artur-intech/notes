@@ -23,7 +23,10 @@ class PgUserTest < TestCase
   end
 
   def test_fetches_user_by_email
-    assert_equal PgUser.new(user.id, pg_connection), PgUsers.new(pg_connection).by_email(user.email)
+    users = PgUsers.new(pg_connection)
+
+    assert_equal PgUser.new(user.id, pg_connection), users.by_email(user.email)
+    assert_raises(PgUsers::UserNotFoundError) { users.by_email('nonexistent') }
   end
 
   private

@@ -9,6 +9,8 @@ todo
 - do not reload note list after deletion
 - What does pressing ESC do when editing? Currently it is buggy.
 - catch js errors
+- migrations
+- db empty email constraint
 
 done
 - CI

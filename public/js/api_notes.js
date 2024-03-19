@@ -31,19 +31,9 @@ class ApiNotes {
         const loadCallback = function () {
             const doneState = 4;
             const okStatus = 200;
-            const forbiddenStatus = 403;
 
-            if (request.readyState === doneState) {
-                switch (request.status) {
-                    case okStatus:
-                        onSuccess(request.response);
-                        break;
-                    case forbiddenStatus:
-                        location.reload();
-                        break;
-                    default:
-                        break;
-                }
+            if (request.readyState === doneState && request.status === okStatus) {
+                onSuccess(request.response);
             } else {
                 alert('Request has failed.');
             }

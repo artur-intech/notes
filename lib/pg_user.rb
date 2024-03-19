@@ -9,8 +9,6 @@ class PgUser
   end
 
   def can_be_authenticated?(plain_password)
-    encrypted_password = pg_connection.exec_params('SELECT encrypted_password FROM users WHERE id = $1', [id])
-                                      .getvalue(0, 0)
     BCrypt::Password.new(encrypted_password) == plain_password
   end
 
@@ -29,4 +27,8 @@ class PgUser
   private
 
   attr_reader :pg_connection
+
+  def encrypted_password
+    pg_connection.exec_params('SELECT encrypted_password FROM users WHERE id = $1', [id]).getvalue(0, 0)
+  end
 end

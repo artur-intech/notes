@@ -77,8 +77,10 @@ class NotesApiTest < IntegrationTestCase
   def test_prohibit_anonymous_user
     logout
 
-    get '/'
-    assert last_response.forbidden?, 'Anonymous user must not be able to access GET /'
+    get '/', nil, 'HTTP_ACCEPT' => Rack::Mime.mime_type('.html')
+    assert_response :ok
+    assert_match Rack::Mime.mime_type('.html'), last_response.content_type
+    refute_empty last_response.body
 
     get '/sse'
     assert last_response.forbidden?, 'Anonymous user must not be able to access GET /sse'
@@ -97,6 +99,10 @@ class NotesApiTest < IntegrationTestCase
 
     patch '/notes/any/swap'
     assert last_response.forbidden?, 'Anonymous user must not be able to access PATCH /notes/:id/swap'
+
+    get '/', nil, 'HTTP_ACCEPT' => Rack::Mime.mime_type('.json')
+    assert last_response.forbidden?
+    assert_empty last_response.body
   end
 
   def test_non_owned_note_cannot_be_updated

@@ -45,9 +45,8 @@ Warden::Manager.serialize_from_session do |id|
 end
 
 Warden::Manager.before_failure do |env, _opts|
-  # Sinatra is very sensitive to the request method and
-  # since authentication could fail on any type of method, we need
-  # to set it for the failure app so it is routed to the correct block.
+  # Unauthenticated requests always end up in `post /unauthenticated` route no matter
+  # what the initial request method
   env['REQUEST_METHOD'] = 'POST'
 end
 

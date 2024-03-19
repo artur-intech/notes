@@ -159,6 +159,30 @@
             },
             "problemMatcher": [],
             "isBackground": false
+        },
+        {
+            "label": "IRB",
+            "type": "shell",
+            "command": "irb",
+            "icon": {},
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "isBackground": false,
+            "options": {
+                "env": {
+                    "PG_HOST": "localhost",
+                    "PG_USER": "notes_development",
+                    "PG_PASSWORD": "notes_development"
+                }
+            }
         }
     ]
 }
+s

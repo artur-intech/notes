@@ -9,6 +9,9 @@ class PgUser
   end
 
   def can_be_authenticated?(plain_password)
+    raise ArgumentError if plain_password.nil?
+    raise ArgumentError if plain_password.empty?
+
     BCrypt::Password.new(encrypted_password) == plain_password
   end
 

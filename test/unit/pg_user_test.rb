@@ -37,6 +37,14 @@ class PgUserTest < TestCase
 
     assert pg_user.can_be_authenticated?(right_password)
     refute pg_user.can_be_authenticated?('wrong password')
+
+    assert_raises ArgumentError, 'Password cannot be nil' do
+      pg_user.can_be_authenticated?(nil)
+    end
+
+    assert_raises ArgumentError, 'Password cannot be empty' do
+      pg_user.can_be_authenticated?('')
+    end
   end
 
   def test_equality

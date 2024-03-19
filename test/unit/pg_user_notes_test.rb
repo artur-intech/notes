@@ -5,9 +5,19 @@ require 'test_helper'
 class PgUserNotesTest < TestCase
   def test_adds_new_note
     notes = PgUserNotes.new(user.id, pg_connection)
+
     assert_difference proc { db_user_note_count } do
       assert_equal fixtures[:notes].size.next, notes.add('any', 1)
     end
+
+    error = assert_raises(ArgumentError) { notes.add(nil, 1) }
+    assert_equal 'Text cannot be nil', error.message
+
+    error = assert_raises(ArgumentError) { notes.add('', 1) }
+    assert_equal 'Text cannot be empty', error.message
+
+    error = assert_raises(ArgumentError) { notes.add('any', -1) }
+    assert_equal 'Position cannot be negative', error.message
   end
 
   def test_fetches

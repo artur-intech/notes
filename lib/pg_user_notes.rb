@@ -8,6 +8,10 @@ class PgUserNotes
   end
 
   def add(text, position)
+    raise ArgumentError, 'Text cannot be nil' if text.nil?
+    raise ArgumentError, 'Text cannot be empty' if text.empty?
+    raise ArgumentError, 'Position cannot be negative' if position.negative?
+
     sql = 'INSERT INTO notes (text, position, user_id) VALUES ($1, $2, $3) RETURNING id'
     pg_connection.exec_params(sql, [text, position, user_id]) do |result|
       id = result.getvalue(0, 0)

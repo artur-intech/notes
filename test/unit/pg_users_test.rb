@@ -13,6 +13,18 @@ class PgUserTest < TestCase
     end
     assert_equal fixtures[:users].size.next, id
     refute_equal pwd, db_password(id), 'Must not store plain password'
+
+    error = assert_raises(ArgumentError) { users.add(email: nil, plain_password: valid_password) }
+    assert_equal 'Email cannot be nil', error.message
+
+    error = assert_raises(ArgumentError) { users.add(email: '', plain_password: valid_password) }
+    assert_equal 'Email cannot be empty', error.message
+
+    error = assert_raises(ArgumentError) { users.add(email: valid_email, plain_password: nil) }
+    assert_equal 'Password cannot be nil', error.message
+
+    error = assert_raises(ArgumentError) { users.add(email: valid_email, plain_password: '') }
+    assert_equal 'Password cannot be empty', error.message
   end
 
   def test_existing_user

@@ -23,6 +23,10 @@ class PgUsers
   end
 
   def add(email:, plain_password:)
+    raise ArgumentError, 'Email cannot be nil' if email.nil?
+    raise ArgumentError, 'Email cannot be empty' if email.empty?
+    raise ArgumentError, 'Password cannot be nil' if plain_password.nil?
+    raise ArgumentError, 'Password cannot be empty' if plain_password.empty?
     raise ExistingUserError if existing_user?(email)
 
     encrypted_password = BCrypt::Password.create(plain_password)

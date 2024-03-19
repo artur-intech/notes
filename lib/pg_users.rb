@@ -25,6 +25,7 @@ class PgUsers
   def add(email:, plain_password:)
     raise ArgumentError, 'Email cannot be nil' if email.nil?
     raise ArgumentError, 'Email cannot be empty' if email.empty?
+    raise ArgumentError, "Invalid email (#{email})" if email_invalid?(email)
     raise ArgumentError, 'Password cannot be nil' if plain_password.nil?
     raise ArgumentError, 'Password cannot be empty' if plain_password.empty?
     raise ExistingUserError if existing_user?(email)
@@ -42,5 +43,10 @@ class PgUsers
 
   def existing_user?(email)
     pg_connection.exec_params('SELECT id FROM users WHERE email = $1', [email]).ntuples.nonzero?
+  end
+
+  def email_invalid?(email)
+    pattern = URI::MailTo::EMAIL_REGEXP
+    email !~ pattern
   end
 end

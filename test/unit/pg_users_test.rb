@@ -20,6 +20,10 @@ class PgUserTest < TestCase
     error = assert_raises(ArgumentError) { users.add(email: '', plain_password: valid_password) }
     assert_equal 'Email cannot be empty', error.message
 
+    invalid_email = 'invalid'
+    error = assert_raises(ArgumentError) { users.add(email: invalid_email, plain_password: valid_password) }
+    assert_equal "Invalid email (#{invalid_email})", error.message
+
     error = assert_raises(ArgumentError) { users.add(email: valid_email, plain_password: nil) }
     assert_equal 'Password cannot be nil', error.message
 

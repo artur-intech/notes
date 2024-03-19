@@ -14,4 +14,10 @@ class SignUpIntegrationTest < IntegrationTestCase
     post '/sign_up', { email: user.email, password: valid_password }
     assert last_request.env['warden'].unauthenticated?, 'User must not be signed in'
   end
+
+  def test_invalid_email
+    assert_raises ArgumentError do
+      post '/sign_up', { email: 'invalid', password: valid_password }
+    end
+  end
 end

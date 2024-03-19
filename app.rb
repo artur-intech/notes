@@ -58,19 +58,7 @@ post '/' do
   redirect '/'
 end
 
-get '/unauthenticated' do
-  only_json_accepted = request.accept.size == 1 && request.accept?(Rack::Mime.mime_type('.json'))
-
-  if only_json_accepted
-    status :forbidden
-  else
-    content_type :html
-    erb :sign_in
-  end
-end
-
 post '/unauthenticated' do
-  # TODO: Combine get and post
   only_json_accepted = request.accept.size == 1 && request.accept?(Rack::Mime.mime_type('.json'))
 
   if only_json_accepted

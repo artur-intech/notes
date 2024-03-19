@@ -1,5 +1,4 @@
 todo
-- backend: check empty note
 - format `note.rb`. How to skip spaces. `trim_mode` does not work.
 - js unit testing?
 - full screen api for editing

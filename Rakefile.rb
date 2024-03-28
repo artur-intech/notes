@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'minitest/test_task'
-require 'pg'
+
+import 'app.rb'
 
 Minitest::TestTask.create do |t|
   t.framework = %(require "test/test_helper.rb")

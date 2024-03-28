@@ -52,4 +52,14 @@ class TestCase < Minitest::Test
     "#{local_part}@inbox.test"
   end
   alias valid_email random_email
+
+  def create_tmp_dir(&block)
+    Dir.mktmpdir do |path|
+      Dir.chdir path, &block
+    end
+  end
+
+  def ensure_file_system_isolated(&)
+    Dir.chdir(Dir.tmpdir, &)
+  end
 end

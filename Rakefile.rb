@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'minitest/test_task'
-require 'pg'
+
+import 'app.rb'
 
 Minitest::TestTask.create do |t|
   t.framework = %(require "test/test_helper.rb")
@@ -36,11 +37,23 @@ task :load_db_schema do
   pg_host = ENV.fetch('PG_HOST', nil)
   pg_user = ENV.fetch('PG_USER', nil)
   pg_password = ENV.fetch('PG_PASSWORD', nil)
-
   pg_connection = PG::Connection.new(host: pg_host,
                                      user: pg_user,
                                      password: pg_password)
-  pg_connection.exec(File.read('db/schema.pgsql'))
+
+  schema_file_path = PgSchema.new(pg_connection:).path
+  `PGPASSWORD=#{pg_password} psql --host #{pg_host} --username #{pg_user} --file #{schema_file_path}`
+end
+
+task :generate_db_schema do
+  pg_host = ENV.fetch('PG_HOST', nil)
+  pg_user = ENV.fetch('PG_USER', nil)
+  pg_password = ENV.fetch('PG_PASSWORD', nil)
+  pg_connection = PG::Connection.new(host: pg_host,
+                                     user: pg_user,
+                                     password: pg_password)
+
+  PgSchema.new(pg_connection:).generate
 end
 
 task :load_db_dummy_data do

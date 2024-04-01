@@ -1,2 +1,0 @@
-CREATE USER notes_development WITH ENCRYPTED PASSWORD 'notes_development' SUPERUSER;
-CREATE USER notes_test WITH ENCRYPTED PASSWORD 'notes_test' SUPERUSER;

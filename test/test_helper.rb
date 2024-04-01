@@ -34,3 +34,10 @@ Warden.test_mode!
 
 rake_app = Rake::Application.new
 rake_app.load_rakefile
+
+module MigrationInterfaceTest
+  def test_implements_migration_interface
+    assert_respond_to @migration, :apply
+    assert_respond_to @migration, :pending?
+  end
+end

@@ -67,4 +67,9 @@ module Assertions
     assert_response :redirect
     assert_equal '/', URI(last_response.location).path, 'Response must redirect to the root path'
   end
+
+  def assert_db_table_exists(name, message = nil)
+    message ||= "Database table #{name} must exist"
+    assert pg_connection.exec("SELECT to_regclass('#{name}')::varchar").getvalue(0, 0), message
+  end
 end

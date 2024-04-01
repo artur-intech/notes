@@ -11,3 +11,5 @@ Metrics/ClassLength:
       - "test/**/*"
 AllCops:
     NewCops: enable
+    Exclude:
+      - ".irb_history"

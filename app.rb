@@ -6,15 +6,22 @@ require 'connection_pool'
 require 'ostruct'
 require 'warden'
 require 'bcrypt'
+require 'pathname'
 require_relative 'lib/pg_note'
 require_relative 'lib/pg_user_notes'
 require_relative 'lib/pg_users'
 require_relative 'lib/pg_user'
 require_relative 'lib/warden_password_strategy'
 require_relative 'lib/owned_note'
+require_relative 'lib/migration'
+require_relative 'lib/pending_migrations'
+require_relative 'lib/clock'
+require_relative 'lib/timestamped_id'
+require_relative 'lib/pg_schema'
+require_relative 'lib/migrations'
 
 def pg_connection
-  ConnectionPool::Wrapper.new(size: 5, timeout: 5) do
+  @pg_connection ||= ConnectionPool::Wrapper.new(size: 5, timeout: 5) do
     pg_connection = PG::Connection.new(host: ENV.fetch('PG_HOST', nil),
                                        user: ENV.fetch('PG_USER', nil),
                                        password: ENV.fetch('PG_PASSWORD', nil))
@@ -51,6 +58,10 @@ Warden::Manager.before_failure do |env, _opts|
 end
 
 Warden::Strategies.add(:password, WardenPasswordStrategy)
+
+before do
+  PendingMigrations.new(Migrations.new(pg_connection:)).ensure_applied unless settings.test?
+end
 
 post '/' do
   warden.authenticate!
@@ -106,6 +117,11 @@ end
 
 error PgNote::NotFoundError do
   status :not_found
+end
+
+error PendingMigrations::MigrationsPendingError do
+  content_type :text
+  env['sinatra.error'].message
 end
 
 get '/' do

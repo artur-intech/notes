@@ -52,4 +52,25 @@ class TestCase < Minitest::Test
     "#{local_part}@inbox.test"
   end
   alias valid_email random_email
+
+  alias mute_io capture_io
+
+  def create_tmp_dir
+    Dir.mktmpdir do |path|
+      Dir.chdir path do
+        migrations_dir_path = File.join(path, 'db/migrations')
+        FileUtils.mkdir_p migrations_dir_path
+        yield migrations_dir_path
+      end
+    end
+  end
+
+  def create_tmp_file(name: '1234_test.sql', content: 'select 1', dir: Dir.tmpdir)
+    path = File.join(dir, name)
+    FileUtils.touch(path)
+    File.write(path, content)
+    yield path, name
+  ensure
+    File.delete path
+  end
 end

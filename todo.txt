@@ -9,6 +9,11 @@ todo
 - catch js errors
 - migrations
 - db empty email constraint
+- consider switching to setup/teardown callbacks instead of method. It's too easy to miss to type `super`.
+- rake namespaces and rake lib https://github.com/ruby/rake/blob/master/lib/rake/application.rb#L555
+- autoload from lib
+- sanitize migration name
+- unit tests without db access
 
 done
 - CI

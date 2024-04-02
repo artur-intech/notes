@@ -10,6 +10,7 @@ Minitest::TestTask.create do |t|
   t.test_globs = ['test/**/*_test.rb']
 end
 
+# :nocov:
 task :create_db do
   pg_host = ENV.fetch('PG_HOST', nil)
   pg_user = ENV.fetch('PG_USER', nil)
@@ -66,3 +67,4 @@ task :load_db_dummy_data do
                                      password: pg_password)
   pg_connection.exec("INSERT INTO notes (text) VALUES ('Deutsch'), ('English'), ('TODO');")
 end
+# :nocov:

@@ -17,7 +17,6 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'coveralls_reborn', require: false
   gem 'minitest'
   gem 'rack-test'
   gem 'rubocop', require: false

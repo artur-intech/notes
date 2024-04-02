@@ -7,7 +7,6 @@ if ENV['COVERAGE']
   SimpleCov.formatters = [
     SimpleCov::Formatter::HTMLFormatter,
     SimpleCov::Formatter::JSONFormatter
-    # Coveralls::SimpleCov::Formatter
   ]
   SimpleCov.start do
     add_filter '/test/'

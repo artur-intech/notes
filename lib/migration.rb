@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Migration
+  # :nocov:
   class Fake
     def initialize(path: 'test', pending: true)
       @path = path
@@ -29,6 +30,7 @@ class Migration
 
     attr_reader :path
   end
+  # :nocov:
 
   class InvalidMigrationError < StandardError; end
 

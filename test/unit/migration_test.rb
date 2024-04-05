@@ -15,7 +15,7 @@ class MigrationTest < TestCase
 
   def setup
     super
-    @migration = Migration.new(path: 'any', pg_connection:)
+    @migration = Migration.new(path: 'any', pg_connection: 'dummy')
     pg_connection.exec('CREATE TEMP TABLE applied_migrations (id character varying(255) NOT NULL UNIQUE)')
   end
 
@@ -32,8 +32,8 @@ class MigrationTest < TestCase
   end
 
   def test_equality
-    one = Migration.new(path: '/one', pg_connection: nil)
-    two = Migration.new(path: '/two', pg_connection: nil)
+    one = Migration.new(path: '/one', pg_connection: 'dummy')
+    two = Migration.new(path: '/two', pg_connection: 'dummy')
 
     assert_equal one, one
     refute_equal one, two
@@ -41,25 +41,25 @@ class MigrationTest < TestCase
   end
 
   def test_inspect
-    assert_equal '1234_test', Migration.new(path: '1234_test.sql', pg_connection: nil).inspect
+    assert_equal '1234_test', Migration.new(path: '1234_test.sql', pg_connection: 'dummy').inspect
   end
 
   def test_sorts_by_path
-    third = Migration.new(path: '3_test.sql', pg_connection:)
-    first = Migration.new(path: '1_test.sql', pg_connection:)
-    second = Migration.new(path: '2_test.sql', pg_connection:)
+    third = Migration.new(path: '3_test.sql', pg_connection: 'dummy')
+    first = Migration.new(path: '1_test.sql', pg_connection: 'dummy')
+    second = Migration.new(path: '2_test.sql', pg_connection: 'dummy')
     assert_equal [first, second, third], [third, first, second].sort
   end
 
   def test_to_s
     path = '1234_test.sql'
-    assert_equal path, Migration.new(path:, pg_connection: nil).to_s
+    assert_equal path, Migration.new(path:, pg_connection: 'dummy').to_s
   end
 
   def test_empty_file
     create_tmp_file content: '' do |path|
       error = assert_raises Migration::InvalidMigrationError do
-        Migration.new(path:, pg_connection:).apply
+        Migration.new(path:, pg_connection: 'dummy').apply
       end
       assert_equal 'Empty file', error.message
     end
@@ -75,7 +75,7 @@ class MigrationTest < TestCase
 
   def test_invalid_filename
     error = assert_raises Migration::InvalidMigrationError do
-      Migration.new(path: 'invalid.sql', pg_connection:).pending?
+      Migration.new(path: 'invalid.sql', pg_connection: 'dummy').pending?
     end
     assert_equal 'Invalid filename', error.message
   end

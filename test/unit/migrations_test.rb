@@ -8,11 +8,11 @@ class MigrationsTest < TestCase
       FileUtils.touch(File.join(path, '3.sql'))
       FileUtils.touch(File.join(path, '1.sql'))
       FileUtils.touch(File.join(path, '2.sql'))
-      expected = [Migration.new(path: File.join(path, '3.sql'), pg_connection:),
-                  Migration.new(path: File.join(path, '2.sql'), pg_connection:),
-                  Migration.new(path: File.join(path, '1.sql'), pg_connection:)]
+      expected = [Migration.new(path: File.join(path, '3.sql'), pg_connection: 'dummy'),
+                  Migration.new(path: File.join(path, '2.sql'), pg_connection: 'dummy'),
+                  Migration.new(path: File.join(path, '1.sql'), pg_connection: 'dummy')]
 
-      actual = Migrations.new(path:, pg_connection:).to_a
+      actual = Migrations.new(path:, pg_connection: 'dummy').to_a
 
       assert_equal expected, actual
     end
@@ -23,14 +23,14 @@ class MigrationsTest < TestCase
       filepath = File.join(path, 'test.sql')
       refute_path_exists filepath
 
-      actual = Migrations.new(path:, pg_connection:).generate(id: 'test')
+      actual = Migrations.new(path:, pg_connection: 'dummy').generate(id: 'test')
 
       assert_path_exists filepath
-      assert_equal Migration.new(path: filepath, pg_connection:), actual
+      assert_equal Migration.new(path: filepath, pg_connection: 'dummy'), actual
     end
   end
 
   def test_default_path
-    assert_equal 'db/migrations', Migrations.new(pg_connection:).path
+    assert_equal 'db/migrations', Migrations.new(pg_connection: 'dummy').path
   end
 end

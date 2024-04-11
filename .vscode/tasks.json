@@ -4,7 +4,7 @@
         {
             "label": "Run ruby file",
             "type": "shell",
-            "command": "puma --control-url tcp://127.0.0.1:9293 --control-token test",
+            "command": "bundle exec puma --control-url tcp://127.0.0.1:9293 --control-token test",
             "icon": {
                 "id": "testing-run-icon"
             },

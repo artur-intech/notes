@@ -13,10 +13,12 @@ class DbMigrationsApplyTest < TestCase
   end
 
   def test_regenerates_schema
-    create_tmp_dir do
+    create_tmp_dir do |dirpath|
+      create_tmp_file dir: dirpath do
       refute_path_exists 'db/schema.sql'
       mute_io { run_task }
       assert_path_exists 'db/schema.sql'
+      end
     end
   end
 

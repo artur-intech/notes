@@ -10,9 +10,18 @@ namespace :db do
       pg_connection = PG::Connection.new(host: pg_host,
                                          user: pg_user,
                                          password: pg_password)
-      PendingMigrations.new(Migrations.new(pg_connection:)).apply do |migration|
+
+      migrations = PendingMigrations.new(Migrations.new(pg_connection:))
+
+      if migrations.none?
+        puts 'There are no pending migrations.'
+        next
+      end
+
+      migrations.apply do |migration|
         puts "Migration #{migration} has been applied"
       end
+
       PgSchema.new(pg_connection:).regenerate
     end
   end

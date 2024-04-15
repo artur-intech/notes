@@ -12,12 +12,20 @@ class DbMigrationsApplyTest < TestCase
     end
   end
 
+  def test_no_pending
+    create_tmp_dir do
+      assert_output "There are no pending migrations.\n" do
+        run_task
+      end
+    end
+  end
+
   def test_regenerates_schema
     create_tmp_dir do |dirpath|
       create_tmp_file dir: dirpath do
-      refute_path_exists 'db/schema.sql'
-      mute_io { run_task }
-      assert_path_exists 'db/schema.sql'
+        refute_path_exists 'db/schema.sql'
+        mute_io { run_task }
+        assert_path_exists 'db/schema.sql'
       end
     end
   end

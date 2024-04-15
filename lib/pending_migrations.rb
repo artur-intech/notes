@@ -18,6 +18,10 @@ class PendingMigrations
     raise MigrationsPendingError, 'Migrations are pending. Run `rake migrate_db`.' if any?
   end
 
+  def none?
+    !any?
+  end
+
   private
 
   attr_reader :origin

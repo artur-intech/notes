@@ -28,4 +28,12 @@ class PendingMigrationsTest < Minitest::Test
     end
     assert_equal 'Migrations are pending. Run `rake migrate_db`.', error.message
   end
+
+  def test_reports_when_none
+    migrations = PendingMigrations.new([Migration::Fake.new(pending: true)])
+    refute migrations.none?
+
+    migrations = PendingMigrations.new([Migration::Fake.new(pending: false)])
+    assert migrations.none?
+  end
 end

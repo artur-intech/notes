@@ -7,10 +7,7 @@ todo
 - do not reload note list after deletion
 - What does pressing ESC do when editing? Currently it is buggy.
 - catch js errors
-- migrations
-- db empty email constraint
 - consider switching to setup/teardown callbacks instead of method. It's too easy to miss to type `super`.
-- rake namespaces and rake lib https://github.com/ruby/rake/blob/master/lib/rake/application.rb#L555
 - autoload from lib
 - sanitize migration name
 - unit tests without db access
@@ -23,3 +20,6 @@ done
 - Sync with server (server-sent events?)
 - yaml fixtures
 - dockerize
+- db empty email constraint
+- migrations: nothing to migrate, namespace pg exception
+- rake namespaces and rake lib https://github.com/ruby/rake/blob/master/lib/rake/application.rb#L555

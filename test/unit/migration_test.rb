@@ -67,9 +67,10 @@ class MigrationTest < TestCase
 
   def test_invalid_sql
     create_tmp_file content: 'invalid sql' do |path|
-      assert_raises Migration::InvalidMigrationError do
+      e = assert_raises Migration::InvalidMigrationError do
         Migration.new(path:, pg_connection:).apply
       end
+      assert_match %(Migration is invalid: ERROR:  syntax error), e.message
     end
   end
 

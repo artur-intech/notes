@@ -18,8 +18,13 @@ namespace :db do
         next
       end
 
-      migrations.apply do |migration|
-        puts "Migration #{migration} has been applied"
+      begin
+        migrations.apply do |migration|
+          puts "Migration #{migration} has been applied"
+        end
+      rescue Migration::InvalidMigrationError => e
+        puts e.message
+        next
       end
 
       PgSchema.new(pg_connection:).regenerate

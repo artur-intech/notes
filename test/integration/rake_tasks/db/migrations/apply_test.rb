@@ -40,6 +40,21 @@ class DbMigrationsApplyTest < TestCase
     end
   end
 
+  def test_schema_is_kept_intact_when_migration_is_invalid
+    create_tmp_dir do |dirpath|
+      schema_path = PgSchema.new(pg_connection: 'dummy').path
+      FileUtils.touch(schema_path)
+
+      create_tmp_file dir: dirpath, content: 'invalid sql' do
+        assert_no_change proc { File.mtime(schema_path).inspect } do
+          assert_output(/Migration is invalid/) do
+            run_task
+          end
+        end
+      end
+    end
+  end
+
   def teardown
     super
     pg_connection.exec('TRUNCATE applied_migrations RESTART IDENTITY CASCADE')

@@ -48,8 +48,8 @@ class Migration
     pg_connection.transaction do
       begin
         pg_connection.exec(sql)
-      rescue PG::SyntaxError
-        raise InvalidMigrationError
+      rescue PG::SyntaxError => e
+        raise InvalidMigrationError, "Migration is invalid: #{e.message}"
       end
 
       track

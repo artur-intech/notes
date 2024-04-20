@@ -19,17 +19,18 @@ class NotesTest < SystemTestCase
     assert_text text
   end
 
-  # def test_updates_note
-  #   note = fixtures[:notes][:first]
-  #   new_text = 'new note text'
+  def test_updates_note
+    note = fixtures[:notes][:first]
+    new_text = 'new'
 
-  #   visit '/'
-  #   click_link "edit-note-link-#{note.id}"
-  #   fill_in 'Text', with: new_text
-  #   click_button 'Update note'
+    visit '/'
+    find(%(.note[data-id="#{note.id}"])).right_click
+    find('.menu .item:first-child').click
+    page.driver.active_element.native.send_keys new_text
+    blur
 
-  #   assert_text new_text
-  # end
+    assert_equal "#{note.text}#{new_text}", find(%(.note[data-id="#{note.id}"])).text
+  end
 
   # def test_escapes_note_text_when_listing
   #   note = fixtures[:notes][:first]
@@ -61,5 +62,9 @@ class NotesTest < SystemTestCase
     end
 
     assert_no_text note.text
+  end
+
+  def blur
+    find('body').click
   end
 end

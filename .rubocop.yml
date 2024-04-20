@@ -15,3 +15,4 @@ AllCops:
       - ".irb_history"
 require:
   - rubocop-capybara
+  - rubocop-minitest

@@ -78,6 +78,9 @@ GEM
       parser (>= 3.3.0.4)
     rubocop-capybara (2.20.0)
       rubocop (~> 1.41)
+    rubocop-minitest (0.35.0)
+      rubocop (>= 1.61, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -140,6 +143,7 @@ DEPENDENCIES
   rake
   rubocop
   rubocop-capybara
+  rubocop-minitest
   selenium-webdriver
   simplecov
   simplecov_json_formatter

@@ -16,3 +16,4 @@ AllCops:
 require:
   - rubocop-capybara
   - rubocop-minitest
+  - rubocop-rake

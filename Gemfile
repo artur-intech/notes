@@ -22,6 +22,7 @@ group :test do
   gem 'rubocop', require: false
   gem 'rubocop-capybara', require: false
   gem 'rubocop-minitest', require: false
+  gem 'rubocop-rake', require: false
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'simplecov_json_formatter', require: false

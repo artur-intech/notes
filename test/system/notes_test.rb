@@ -32,26 +32,6 @@ class NotesTest < SystemTestCase
     assert_equal "#{note.text}#{new_text}", find(%(.note[data-id="#{note.id}"])).text
   end
 
-  # def test_escapes_note_text_when_listing
-  #   note = fixtures[:notes][:first]
-  #   raw_text = '<b>test</b>'
-  #   pg_connection.exec_params('UPDATE notes SET text = $2 WHERE id = $1', [note.id, raw_text])
-
-  #   visit '/'
-
-  #   refute page.html.include?(raw_text)
-  # end
-
-  # def test_escapes_note_text_when_editing
-  #   note = fixtures[:notes][:first]
-  #   raw_text = '<b>test</b>'
-  #   pg_connection.exec_params('UPDATE notes SET text = $2 WHERE id = $1', [note.id, raw_text])
-
-  #   visit "/notes/#{note.id}/edit"
-
-  #   refute page.html.include?(raw_text)
-  # end
-
   def test_deletes_note
     note = fixtures[:notes][:first]
 

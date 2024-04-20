@@ -13,3 +13,5 @@ AllCops:
     NewCops: enable
     Exclude:
       - ".irb_history"
+require:
+  - rubocop-capybara

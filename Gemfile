@@ -20,6 +20,7 @@ group :test do
   gem 'minitest'
   gem 'rack-test'
   gem 'rubocop', require: false
+  gem 'rubocop-capybara', require: false
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'simplecov_json_formatter', require: false

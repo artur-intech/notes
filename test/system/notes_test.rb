@@ -12,9 +12,9 @@ class NotesTest < SystemTestCase
     text = 'new note text'
 
     visit '/'
-    click_button 'new-note-btn'
+    click_on 'new-note-btn'
     fill_in 'text', with: text
-    click_button 'Create note'
+    click_on 'Create note'
 
     assert_text text
   end

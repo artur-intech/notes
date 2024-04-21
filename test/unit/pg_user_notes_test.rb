@@ -23,6 +23,7 @@ class PgUserNotesTest < TestCase
   def test_fetches
     expected = user_notes.map(&:id)
     actual = PgUserNotes.new(user.id, pg_connection, proc { |id| id }).fetch
+
     assert_array_match expected, actual
   end
 
@@ -52,6 +53,7 @@ class PgUserNotesTest < TestCase
   def test_notes_from_other_users_must_be_absent
     other_user_note_id = fixtures[:notes][:third].id
     actual = PgUserNotes.new(user.id, pg_connection).fetch.collect(&:id)
+
     refute_includes actual, other_user_note_id
   end
 end

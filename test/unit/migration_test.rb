@@ -22,11 +22,12 @@ class MigrationTest < TestCase
   def test_executes_sql
     create_tmp_file content: 'CREATE TEMP TABLE test()' do |path|
       mig = Migration.new(path:, pg_connection:)
-      assert mig.pending?
+
+      assert_predicate mig, :pending?
 
       mig.apply
 
-      refute mig.pending?
+      refute_predicate mig, :pending?
       assert_db_table_exists :test
     end
   end
@@ -48,11 +49,13 @@ class MigrationTest < TestCase
     third = Migration.new(path: '3_test.sql', pg_connection: 'dummy')
     first = Migration.new(path: '1_test.sql', pg_connection: 'dummy')
     second = Migration.new(path: '2_test.sql', pg_connection: 'dummy')
+
     assert_equal [first, second, third], [third, first, second].sort
   end
 
   def test_to_s
     path = '1234_test.sql'
+
     assert_equal path, Migration.new(path:, pg_connection: 'dummy').to_s
   end
 

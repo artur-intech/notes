@@ -19,7 +19,8 @@ class PendingMigrationsTest < Minitest::Test
   def test_skips_applied
     mig = Migration::Fake.new(pending: false)
     PendingMigrations.new([mig]).apply
-    refute mig.applied?, 'Must skip applied migration'
+
+    refute_predicate mig, :applied?, 'Must skip applied migration'
   end
 
   def test_ensures_applied
@@ -31,9 +32,11 @@ class PendingMigrationsTest < Minitest::Test
 
   def test_reports_when_none
     migrations = PendingMigrations.new([Migration::Fake.new(pending: true)])
-    refute migrations.none?
+
+    refute_predicate migrations, :none?
 
     migrations = PendingMigrations.new([Migration::Fake.new(pending: false)])
-    assert migrations.none?
+
+    assert_predicate migrations, :none?
   end
 end

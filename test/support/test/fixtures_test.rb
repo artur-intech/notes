@@ -3,6 +3,14 @@
 require 'test_helper'
 
 class FixturesTest < Minitest::Test
+  def setup
+    setup_db
+  end
+
+  def teardown
+    clean_up_db
+  end
+
   def test_represents_itself_as_hash
     fixtures = Fixtures.new('test/support/test/fixtures.yml', pg_connection)
 
@@ -14,19 +22,12 @@ class FixturesTest < Minitest::Test
                             'employee_count' => 2 })
     john = OpenStruct.new({ 'id' => 1,
                             'company_id' => 1 })
+
     assert_equal 1, pg_connection.exec('SELECT COUNT(*) FROM companies').getvalue(0, 0), 'Db row must be inserted'
     assert_equal ({ companies: { acme: }, employees: { john: } }), actual
   end
 
   private
-
-  def setup
-    setup_db
-  end
-
-  def teardown
-    clean_up_db
-  end
 
   def setup_db
     sql = <<-SQL

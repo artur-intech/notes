@@ -6,6 +6,7 @@ class PgSchemaTest < TestCase
   def test_generates
     create_tmp_dir do
       schema = PgSchema.new(pg_connection:)
+
       refute_path_exists schema.path
 
       schema.generate

@@ -30,14 +30,10 @@ class PgSchema
         AND table_name != 'applied_migrations'
     SQL
 
-    tables = []
-
     result = pg_connection.exec(sql)
-    result.each do |row|
-      tables << row['table_name']
+    result.map do |row|
+      row['table_name']
     end
-
-    tables
   end
 
   def excluded

@@ -6,12 +6,14 @@ class PgNoteTest < TestCase
   def test_reports_text
     note = fixtures[:notes][:first]
     pg_note = PgNote.new(note.id, pg_connection)
+
     assert_equal note.text, pg_note.text
   end
 
   def test_reports_position
     fixture = fixtures[:notes][:first]
     note = PgNote.new(fixture.id, pg_connection)
+
     assert_equal fixture.position, note.position
   end
 
@@ -65,12 +67,14 @@ class PgNoteTest < TestCase
   def test_type_casts_id_to_int
     id_as_str = '1'
     note = PgNote.new(id_as_str, nil)
-    assert_equal note.id, 1
+
+    assert_equal 1, note.id
   end
 
   def test_reports_user
     fixture = fixtures[:notes][:first]
     note = PgNote.new(fixture.id, pg_connection)
+
     assert_equal PgUser.new(fixture.user_id, pg_connection), note.user
   end
 

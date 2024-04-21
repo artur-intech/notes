@@ -7,6 +7,7 @@ class DbMigrationsNewTest < TestCase
     create_tmp_dir do |path|
       assert Dir.empty? path
       mute_io { run_task 'test' }
+
       refute Dir.empty? path
     end
   end

@@ -71,6 +71,7 @@ class NotesApiTest < IntegrationTestCase
     expected = user_notes.map do |note|
       PgNote.new(note.id, pg_connection).json_hash
     end
+
     assert_json_response(expected)
   end
 
@@ -108,6 +109,7 @@ class NotesApiTest < IntegrationTestCase
   def test_non_owned_note_cannot_be_updated
     new_text = 'new'
     note = non_owned_note
+
     refute_equal new_text, note.text
 
     assert_no_change proc { note.text } do
@@ -128,6 +130,7 @@ class NotesApiTest < IntegrationTestCase
   def test_non_owned_note_cannot_be_swapped
     note = non_owned_note
     target_note = PgNote.new(fixtures[:notes][:first].id, pg_connection)
+
     refute_equal note.id, target_note.id
     refute_equal note.position, target_note.position
 
@@ -139,12 +142,15 @@ class NotesApiTest < IntegrationTestCase
 
   def test_nonexistent_note
     patch '/notes/nonexistent'
+
     assert_response :not_found
 
     delete '/notes/nonexistent'
+
     assert_response :not_found
 
     patch '/notes/nonexistent/swap'
+
     assert_response :not_found
   end
 
@@ -152,6 +158,7 @@ class NotesApiTest < IntegrationTestCase
 
   def non_owned_note
     note = PgNote.new(fixtures[:notes][:third].id, pg_connection)
+
     refute_equal note.user, user
     note
   end

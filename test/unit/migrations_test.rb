@@ -21,6 +21,7 @@ class MigrationsTest < TestCase
   def test_generates
     create_tmp_dir do |path|
       filepath = File.join(path, 'test.sql')
+
       refute_path_exists filepath
 
       actual = Migrations.new(path:, pg_connection: 'dummy').generate(id: 'test')

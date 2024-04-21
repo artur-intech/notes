@@ -29,6 +29,7 @@ end
 class PgUserTest < TestCase
   def test_reports_email
     pg_user = PgUser.new(user.id, pg_connection)
+
     assert_equal user.email, pg_user.email
   end
 
@@ -60,6 +61,7 @@ class PgUserTest < TestCase
     id = 1
     email = 'email'
     user = PgUser.new(id, FakePgConnection.new(email))
+
     assert_equal "#{id}, #{email}", user.inspect
   end
 end

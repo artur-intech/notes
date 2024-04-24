@@ -35,6 +35,11 @@ class PgUserNotes
     fetch.map(&:json_hash).to_json
   end
 
+  def ids
+    result = pg_connection.exec('SELECT id FROM notes WHERE user_id = $1', [user_id])
+    result.map { |row| row['id'] }
+  end
+
   private
 
   attr_reader :pg_connection, :note_by_id, :user_id

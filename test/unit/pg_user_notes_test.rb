@@ -56,4 +56,8 @@ class PgUserNotesTest < TestCase
 
     refute_includes actual, other_user_note_id
   end
+
+  def test_reports_ids
+    assert_array_match user_notes.collect(&:id), PgUserNotes.new(user.id, pg_connection).ids
+  end
 end

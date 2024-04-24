@@ -176,29 +176,18 @@ get '/notes' do
   pg_notes.json
 end
 
-get '/sse', provides: 'text/event-stream' do # rubocop:disable Metrics/BlockLength
+get '/sse', provides: 'text/event-stream' do
   warden.authenticate!
   cache_control :no_cache
 
-  initial_ids = []
+  initial_ids = PgUserNotes.new(current_user.id, pg_connection).ids
   last_updated = Time.now
-
-  pg_connection.exec('SELECT id FROM notes') do |result|
-    result.each do |row|
-      initial_ids << row['id']
-    end
-  end
 
   stream :keep_open do |stream|
     pg_result = pg_connection.exec_params('SELECT COUNT(*) FROM notes WHERE updated_at >= $1', [last_updated])
     updated_note_count = pg_result.getvalue(0, 0).to_i
 
-    current_ids = []
-    pg_connection.exec('SELECT id FROM notes') do |result|
-      result.each do |row|
-        current_ids << row['id'].to_i
-      end
-    end
+    current_ids = PgUserNotes.new(current_user.id, pg_connection).ids
 
     if current_ids != initial_ids || !updated_note_count.zero?
       initial_ids = current_ids

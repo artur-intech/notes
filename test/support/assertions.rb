@@ -60,7 +60,8 @@ module Assertions
 
   def assert_array_match(expected, actual)
     msg = %(Arrays must match, but they do not: #{expected.inspect}, #{actual.inspect})
-    assert expected.difference(actual).empty?, msg
+
+    assert_empty (expected.difference(actual) + actual.difference(expected)), msg
   end
 
   def assert_root_redirect

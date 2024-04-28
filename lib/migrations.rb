@@ -15,7 +15,7 @@ class Migrations
 
   def each(&)
     migrations = Dir.new(path).children.map { |p| migration_by_path.call(File.join(path, p)) }
-    migrations.sort.reverse.each(&)
+    migrations.sort.each(&)
   end
 
   def generate(id:)

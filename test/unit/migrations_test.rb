@@ -3,14 +3,14 @@
 require 'test_helper'
 
 class MigrationsTest < TestCase
-  def test_returns_migrations_in_chronological_reversed_order
+  def test_returns_migrations_in_chronological_order
     create_tmp_dir do |path|
-      FileUtils.touch(File.join(path, '3.sql'))
       FileUtils.touch(File.join(path, '1.sql'))
+      FileUtils.touch(File.join(path, '3.sql'))
       FileUtils.touch(File.join(path, '2.sql'))
-      expected = [Migration.new(path: File.join(path, '3.sql'), pg_connection: 'dummy'),
+      expected = [Migration.new(path: File.join(path, '1.sql'), pg_connection: 'dummy'),
                   Migration.new(path: File.join(path, '2.sql'), pg_connection: 'dummy'),
-                  Migration.new(path: File.join(path, '1.sql'), pg_connection: 'dummy')]
+                  Migration.new(path: File.join(path, '3.sql'), pg_connection: 'dummy')]
 
       actual = Migrations.new(path:, pg_connection: 'dummy').to_a
 

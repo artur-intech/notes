@@ -60,4 +60,24 @@ class PgUserNotesTest < TestCase
   def test_reports_ids
     assert_array_match user_notes.collect(&:id), PgUserNotes.new(user.id, pg_connection).ids
   end
+
+  def test_reports_whether_updated_since_some_moment
+    delete_all_notes
+    moment = Time.new(1970)
+    create_note(user_id: user.id, updated_at: moment)
+    another_user_id = 99
+
+    assert PgUserNotes.new(user.id, pg_connection).updated_since?(moment)
+    refute PgUserNotes.new(user.id, pg_connection).updated_since?(moment + 1)
+    refute PgUserNotes.new(another_user_id, pg_connection).updated_since?(moment)
+  end
+
+  def create_note(user_id:, updated_at:)
+    pg_connection.exec_params("INSERT INTO notes(text, position, user_id, updated_at) VALUES('any', 0, $1, $2)",
+                              [user_id, updated_at])
+  end
+
+  def delete_all_notes
+    pg_connection.exec('TRUNCATE notes')
+  end
 end

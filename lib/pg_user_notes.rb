@@ -40,6 +40,12 @@ class PgUserNotes
     result.map { |row| row['id'] }
   end
 
+  def updated_since?(moment)
+    result = pg_connection.exec_params('SELECT COUNT(*) FROM notes WHERE user_id = $1 AND updated_at >= $2',
+                                       [user_id, moment])
+    !result.getvalue(0, 0).to_i.zero?
+  end
+
   private
 
   attr_reader :pg_connection, :note_by_id, :user_id

@@ -179,17 +179,15 @@ end
 get '/sse', provides: 'text/event-stream' do
   warden.authenticate!
   cache_control :no_cache
+  notes = PgUserNotes.new(current_user.id, pg_connection)
 
-  initial_ids = PgUserNotes.new(current_user.id, pg_connection).ids
+  initial_ids = notes.ids
   last_updated = Time.now
 
   stream :keep_open do |stream|
-    pg_result = pg_connection.exec_params('SELECT COUNT(*) FROM notes WHERE updated_at >= $1', [last_updated])
-    updated_note_count = pg_result.getvalue(0, 0).to_i
+    current_ids = notes.ids
 
-    current_ids = PgUserNotes.new(current_user.id, pg_connection).ids
-
-    if current_ids != initial_ids || !updated_note_count.zero?
+    if current_ids != initial_ids || notes.updated_since?(last_updated)
       initial_ids = current_ids
       last_updated = Time.now
       stream << "data: #{{ updated: true }.to_json}\n\n" unless stream.closed?

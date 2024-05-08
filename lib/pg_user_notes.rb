@@ -20,11 +20,10 @@ class PgUserNotes
   end
 
   def fetch
-    notes = []
+    result = pg_connection.exec_params('SELECT * FROM notes WHERE user_id = $1 ORDER BY position DESC', [user_id])
 
-    pg_connection.exec_params('SELECT * FROM notes WHERE user_id = $1 ORDER BY position DESC', [user_id]) do |result|
-      result.each do |pg_row|
-        notes << note_by_id.call(pg_row['id'])
+    result.map do |pg_row|
+      note_by_id.call(pg_row['id'])
       end
     end
 

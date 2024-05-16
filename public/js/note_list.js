@@ -5,23 +5,16 @@ class NoteList {
     #element;
     #template;
     #selector = '.note';
-    #sseEventSrc;
 
     constructor({ apiNotes, element, template }) {
         this.#apiNotes = apiNotes;
         this.#element = element;
         this.#template = template;
 
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                this.#reRender();
-                this.#initSse();
-            } else {
-                this.#sseEventSrc.close();
-            }
+        document.addEventListener('notesUpdated', () => {
+            this.#reRender();
         });
 
-        this.#initSse();
         new MutationObserver(this.#toggleNoNotesMsg.bind(this)).observe(this.#element, { childList: true });
     }
     add({ text, onSuccess }) {
@@ -81,16 +74,6 @@ class NoteList {
         element.dataset.position = position;
 
         return element;
-    }
-    #initSse() {
-        this.#sseEventSrc = new EventSource('/sse');
-        this.#sseEventSrc.onmessage = (event) => {
-            const parsedBody = JSON.parse(event.data);
-
-            if (parsedBody.updated) {
-                this.#reRender();
-            }
-        };
     }
     #toggleNoNotesMsg() {
         const visible = Boolean(this.#element.childElementCount);

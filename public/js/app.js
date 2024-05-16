@@ -46,4 +46,6 @@ if (notesPage) {
             }
         }
     });
+
+    new NoteListServerUpdates();
 }

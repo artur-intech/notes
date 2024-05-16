@@ -47,5 +47,5 @@ if (notesPage) {
         }
     });
 
-    new NoteListServerUpdates();
+    new NotesServerUpdates();
 }

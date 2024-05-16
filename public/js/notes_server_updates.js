@@ -1,6 +1,6 @@
 'use strict';
 
-class NoteListServerUpdates {
+class NotesServerUpdates {
     #sseEventSrc;
 
     constructor() {

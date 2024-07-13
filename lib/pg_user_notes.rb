@@ -24,10 +24,7 @@ class PgUserNotes
 
     result.map do |pg_row|
       note_by_id.call(pg_row['id'])
-      end
     end
-
-    notes
   end
 
   def json
